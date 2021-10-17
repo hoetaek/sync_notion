@@ -5,7 +5,7 @@ credentials = {
   "type": "service_account",
   "project_id": "gsheet-notion-stock",
   "private_key_id": environ["PRIVATE_KEY_ID"],
-  "private_key": environ["PRIVATE_KEY"],
+  "private_key": environ["PRIVATE_KEY"].replace("\\n", "\n"),
   "client_email": "get-stock-info@gsheet-notion-stock.iam.gserviceaccount.com",
   "client_id": "113516897813603369913",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
