@@ -1,27 +1,21 @@
 from notion_client import Client
 from os import environ
+from datetime import datetime
+from pprint import pprint
 
 token = environ["NOTION_TOKEN"]
-
 notion = Client(auth=token)
-database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
 
 
-
-# page_id = "b2bac9a22a854958a67bdaab7fff5c13"
-# page = notion.pages.retrieve(page_id="5efad401-0016-4090-a097-de0c3dc6efa8")
-# pprint(page)
-
-def get_pages_from_stock_db(database_id=database_id):
+def get_pages_from_stock_db():
+    database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
     pages = notion.databases.query(database_id)
-    # for page in pages["results"]:
-    #     pprint(page["properties"]["종목명"]["title"][0]["text"]["content"])
-
     stock_names = [page["properties"]["종목명"]["title"][0]["text"]["content"] for page in pages["results"]]
     return stock_names
 
 
-def create_page(stock_name, database_id=database_id):
+def create_stock_page(stock_name):
+    database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
     notion.pages.create(
         parent= {
             'database_id': database_id,
@@ -39,3 +33,37 @@ def create_page(stock_name, database_id=database_id):
             '보유 여부': {'checkbox': True},
             },
         )
+
+def create_action_page(title, endDate):
+    database_id = "c596f2ffc3e04190bf72a763e0503b06"
+    page = notion.pages.create(
+        parent= {
+            'database_id': database_id,
+            },
+        properties= {
+            '이름': {
+                'title': [
+                    {
+                        'text': {
+                        'content': title,
+                        },
+                        }
+                    ],
+                },
+            '상태': {
+                'select': {
+                    'color': 'pink',
+                    'name': 'To Do'
+                }
+            },
+            '마감': {
+                    'date': {
+                        'start': endDate if endDate else datetime.today().strftime('%Y-%m-%d'),
+                    }
+            }
+            },
+        )
+    return page['id']
+
+if __name__=="__main__":
+    print(create_action_page("테스트", "2022-01-31"))
