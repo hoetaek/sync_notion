@@ -12,7 +12,7 @@ def update_notion_stocks():
     print(new_stocks)
 
     for stock in new_stocks:
-        notion_db.create_page(stock)
+        notion_db.create_stock_page(stock)
 
 
 def sync_todoist2notion():
