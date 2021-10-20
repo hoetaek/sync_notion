@@ -1,4 +1,4 @@
-from util import update_notion_stocks
+from util import update_notion_stocks, sync_todoist2notion
 from flask import Flask
 from multiprocessing import Process
 
@@ -19,7 +19,7 @@ def hello_world():
 @app.route('/todoist')
 def todoist():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
-        target=update_notion_stocks,
+        target=sync_todoist2notion,
         daemon=True
     )
     heavy_process.start()
