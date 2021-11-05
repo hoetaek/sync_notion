@@ -2,6 +2,7 @@ from notion_client import Client
 from os import environ
 from datetime import datetime
 from pprint import pprint
+from gtd import GTD
 
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
@@ -34,7 +35,7 @@ def create_stock_page(stock_name):
             },
         )
 
-def create_gtd_page(title, endDate):
+def create_gtd_collect_page(title):
     database_id = "c596f2ffc3e04190bf72a763e0503b06"
     page = notion.pages.create(
         parent= {
@@ -53,51 +54,47 @@ def create_gtd_page(title, endDate):
             '상태': {
                 'select': {
                     'color': 'pink',
-                    'name': 'To Do'
+                    'name': '-----수집함-----'
                 }
             },
-            '마감': {
-                    'date': {
-                        'start': endDate if endDate else datetime.today().strftime('%Y-%m-%d'),
-                    }
-            }
             },
         )
     return page['id']
 
-def create_action_page(title, endDate):
+
+def get_gtd_date_next_action_pages():
     database_id = "c596f2ffc3e04190bf72a763e0503b06"
-    page = notion.pages.create(
-        parent= {
-            'database_id': database_id,
-            },
-        properties= {
-            '이름': {
-                'title': [
-                    {
-                        'text': {
-                        'content': title,
-                        },
-                        }
-                    ],
-                },
-            '상태': {
-                'select': {
-                    'color': 'pink',
-                    'name': 'To Do'
-                }
-            },
-            '마감': {
-                    'date': {
-                        'start': endDate if endDate else datetime.today().strftime('%Y-%m-%d'),
-                    }
-            }
-            },
-        )
-    return page['id']
+    pages = notion.databases.query(database_id, filter={
+        "or": [{ 
+            "property": "상태", 
+            "select": {
+            "equals": "일정"
+            }},
+           {
+            "property": "상태",
+            "select": {
+                "equals": "다음 행동"
+            }}
+            ]
+})
+    gtd_pages = [GTD.from_notion(page) for page in pages["results"]]
+    return gtd_pages
+
 
 if __name__=="__main__":
-    database_id = "c596f2ffc3e04190bf72a763e0503b06"
-    pages = notion.databases.query(database_id)
-    names = [page["properties"] for page in pages["results"]]
-    pprint(names)
+    pages = get_gtd_date_next_action_pages()
+    pprint(pages)
+
+# 다음 행동은 yellow
+# 일정은 defaults
+
+# date_pages = notion.databases.query(database_id, filter={
+#         "property": "상태", 
+#         "select": {
+#         "equals": "일정"
+#         }})
+# next_action_pages = notion.databases.query(database_id, filter={
+#         "property": "상태", 
+#         "select": {
+#         "equals": "다음 행동"
+#         }})
