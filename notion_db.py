@@ -34,6 +34,37 @@ def create_stock_page(stock_name):
             },
         )
 
+def create_gtd_page(title, endDate):
+    database_id = "c596f2ffc3e04190bf72a763e0503b06"
+    page = notion.pages.create(
+        parent= {
+            'database_id': database_id,
+            },
+        properties= {
+            '이름': {
+                'title': [
+                    {
+                        'text': {
+                        'content': title,
+                        },
+                        }
+                    ],
+                },
+            '상태': {
+                'select': {
+                    'color': 'pink',
+                    'name': 'To Do'
+                }
+            },
+            '마감': {
+                    'date': {
+                        'start': endDate if endDate else datetime.today().strftime('%Y-%m-%d'),
+                    }
+            }
+            },
+        )
+    return page['id']
+
 def create_action_page(title, endDate):
     database_id = "c596f2ffc3e04190bf72a763e0503b06"
     page = notion.pages.create(
@@ -66,4 +97,7 @@ def create_action_page(title, endDate):
     return page['id']
 
 if __name__=="__main__":
-    print(create_action_page("테스트", "2022-01-31"))
+    database_id = "c596f2ffc3e04190bf72a763e0503b06"
+    pages = notion.databases.query(database_id)
+    names = [page["properties"] for page in pages["results"]]
+    pprint(names)
