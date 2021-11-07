@@ -2,24 +2,22 @@ from notion_client import Client
 from os import environ
 from datetime import datetime
 from pprint import pprint
-from gtd import GTD
+from constants import gtd_database_id, stock_database_id, meta_reminders_database_id
 
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
 
 
 def get_pages_from_stock_db():
-    database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
-    pages = notion.databases.query(database_id)
+    pages = notion.databases.query(stock_database_id)
     stock_names = [page["properties"]["종목명"]["title"][0]["text"]["content"] for page in pages["results"]]
     return stock_names
 
 
 def create_stock_page(stock_name):
-    database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
     notion.pages.create(
         parent= {
-            'database_id': database_id,
+            'database_id': stock_database_id,
             },
         properties= {
             '종목명': {
@@ -36,10 +34,9 @@ def create_stock_page(stock_name):
         )
 
 def create_gtd_collect_page(title):
-    database_id = "c596f2ffc3e04190bf72a763e0503b06"
     page = notion.pages.create(
         parent= {
-            'database_id': database_id,
+            'database_id': gtd_database_id,
             },
         properties= {
             '이름': {
@@ -63,8 +60,7 @@ def create_gtd_collect_page(title):
 
 
 def get_gtd_date_next_action_pages():
-    database_id = "c596f2ffc3e04190bf72a763e0503b06"
-    pages = notion.databases.query(database_id, filter={
+    result = notion.databases.query(gtd_database_id, filter={
         "or": [{ 
             "property": "상태", 
             "select": {
@@ -77,9 +73,48 @@ def get_gtd_date_next_action_pages():
             }}
             ]
 })
-    gtd_pages = [GTD.from_notion(page) for page in pages["results"]]
-    return gtd_pages
+    return result["results"]
 
+def update_gtd_date_next_action_pages(page_id, task_id):
+    page = notion.pages.update(
+        page_id = page_id,
+        properties = {
+        "Todoist id": {
+            "number": task_id,
+        },
+        },
+    )
+
+def create_meta_reminders_page(reminder, label_id):
+    page = notion.pages.create(
+        parent= {
+            'database_id': meta_reminders_database_id,
+            },
+        properties= {
+            '실행환기': {
+                'title': [
+                    {
+                        'text': {
+                        'content': reminder,
+                        },
+                        }
+                    ],
+                },
+            'id': {
+                'number': label_id
+            },
+            },
+        )
+    return page['id']
+
+
+def get_meta_reminders_dict():
+    pages = notion.databases.query(meta_reminders_database_id)
+    reminders_dict = dict()
+    for page in pages["results"]:
+        if page["properties"]["실행환기"]["title"]:
+            reminders_dict[page["properties"]["실행환기"]["title"][0]["text"]["content"]] = page["properties"]["id"]["number"]
+    return reminders_dict
 
 if __name__=="__main__":
     pages = get_gtd_date_next_action_pages()

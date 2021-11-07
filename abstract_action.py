@@ -1,11 +1,18 @@
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractAction(ABCMeta):
+class Action(object, metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, page_id, title, labels, date, task_id):
+    def __init__(self, page_id, title, reminder, date, task_id):
         self.page_id = page_id
         self.title = title
-        self.labels = labels
+        self.reminder = reminder
         self.date = date
         self.task_id = task_id
+
+
+    def __str__(self) -> str:
+        return str(self.__dict__)
+
+    def __eq__(self, o: object) -> bool:
+        return self.page_id == o
