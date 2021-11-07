@@ -78,12 +78,17 @@ def update_date_next_action_task(task_id, title, label_ids, date):
         })
 
 def close_task(task_id):
+    requests.delete(f"https://api.todoist.com/rest/v1/tasks/{task_id}", 
+    headers={
+        "Authorization": "Bearer " + token
+    })
+
+def delete_task(task_id):
     requests.post(
         f"https://api.todoist.com/rest/v1/tasks/{task_id}/close", 
         headers={
             "Authorization": "Bearer " + token
         })
-
 
 def get_all_labels():
     labels = requests.get(

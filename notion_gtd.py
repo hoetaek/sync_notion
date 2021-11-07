@@ -24,9 +24,10 @@ class GTD(Action):
     
     @classmethod
     def from_webhook(cls, item):
-        page_id = item["description"]
-        task_id = item["id"]
-        return cls(page_id, None, None, None, task_id)
+        task_id = item["event_data"]["id"]
+        title = item["event_data"]["content"]
+        page_id = item["event_data"]["description"]
+        return cls(page_id, title, None, None, task_id)
 
 
     def is_at_todoist(self):
@@ -36,15 +37,14 @@ class GTD(Action):
 
 
     def create(self):
-        # if no Notion page then create
-        if not self.is_at_notion():
-            return create_gtd_collect_page(self.title)
+        return create_gtd_collect_page(self.title)
 
     def update(self):
         update_gtd_date_next_action_pages_todoist_id(self.page_id, self.task_id)
 
     def complete(self):
-        update_gtd_date_next_action_pages_compete(self.page_id)
+        if self.page_id:
+            update_gtd_date_next_action_pages_compete(self.page_id)
 
 
 if __name__=="__main__":

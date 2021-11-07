@@ -1,6 +1,6 @@
 from abstract_action import Action
 from notion_job import get_meta_reminders_dict
-from todoist_job import create_date_next_action_task, update_date_next_action_task, close_task
+from todoist_job import create_date_next_action_task, delete_task, update_date_next_action_task, close_task
 
 
 class Task(Action):
@@ -49,3 +49,6 @@ class Task(Action):
 
     def close(self):
         close_task(self.task_id)
+
+    def delete(self):
+        delete_task(self.task_id)
