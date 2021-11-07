@@ -18,12 +18,13 @@ class Task(Action):
         notion_labels = {v: k for k, v in Task.meta_reminders_dict.items()}
         reminder = [notion_labels.get(i) for i in todoist_obj["label_ids"]]
         date = todoist_obj.get("due").get("datetime") if todoist_obj.get("due") != None else None
-        task = todoist_obj["id"]
-        return cls(page_id, title, reminder, date, task)
+        task_id = todoist_obj["id"]
+        return cls(page_id, title, reminder, date, task_id)
 
     @classmethod
     def from_gtd(cls, gtd):
         return cls(**gtd.__dict__)
+
 
     @classmethod
     def update_meta_reminders_dict(cls):

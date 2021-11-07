@@ -75,13 +75,30 @@ def get_gtd_date_next_action_pages():
 })
     return result["results"]
 
-def update_gtd_date_next_action_pages(page_id, task_id):
-    page = notion.pages.update(
+def update_gtd_date_next_action_pages_todoist_id(page_id, task_id):
+    notion.pages.update(
         page_id = page_id,
         properties = {
         "Todoist id": {
             "number": task_id,
         },
+        },
+    )
+
+
+def update_gtd_date_next_action_pages_compete(page_id):
+    notion.pages.update(
+        page_id = page_id,
+        properties = {
+        "상태": {
+            "select": {
+                    'color': 'brown',
+                    'name': 'Done'
+                },
+        },
+        "완료" : {
+            "checkbox": True,
+        }
         },
     )
 
