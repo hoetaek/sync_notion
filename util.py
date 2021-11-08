@@ -17,26 +17,6 @@ def update_notion_stocks():
         notion_job.create_stock_page(stock)
 
 
-def sync_todoist2notion():
-    todo_tasks = todoist_job.get_inbox_tasks()
-
-    data_path = 'sync_data.json'
-    relation_data = dict()
-    if not os.path.exists(data_path):
-        pass
-    else:
-        with open(data_path, 'r') as f:  
-            relation_data = json.load(f)
-    task_not_in_notion = [t for t in todo_tasks if t['id'] not in relation_data.keys()]
-
-    for task in task_not_in_notion:
-        page_id = notion_job.create_action_page(task['title'], task['endDate'])
-        relation_data[task['id']] = page_id
-    
-    with open(data_path, 'w') as f:  
-            json.dump(relation_data, f)
-
-
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()
     gtd_date_next_action_pages = [GTD.from_notion(r) for r in page_results]
