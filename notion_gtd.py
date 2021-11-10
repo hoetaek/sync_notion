@@ -3,8 +3,8 @@ from notion_job import create_gtd_collect_page, get_gtd_date_next_action_pages, 
 
 
 class GTD(Action):
-    def __init__(self, page_id, title, reminder, date, task_id):
-        super().__init__(page_id, title, reminder, date, task_id)
+    def __init__(self, page_id, title, reminder, date, task_id, checked=False):
+        super().__init__(page_id, title, reminder, date, task_id, checked)
 
     @classmethod
     def from_notion(cls, page_obj):
@@ -15,7 +15,8 @@ class GTD(Action):
         if page_obj["properties"]["일정"]["date"] != None:
             date = page_obj["properties"]["일정"]["date"]["start"]
         task_id = page_obj["properties"]["Todoist id"]["number"]
-        return cls(page_id, title, reminder, date, task_id)
+        checked = page_obj["properties"]["완료"]["checkbox"]
+        return cls(page_id, title, reminder, date, task_id, checked)
 
     @classmethod
     def from_todoist(cls, todoist):

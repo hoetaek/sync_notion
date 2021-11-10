@@ -86,6 +86,17 @@ def update_gtd_date_next_action_pages_todoist_id(page_id, task_id):
     )
 
 
+def reopen_gtd_date_next_action_page(page_id):
+     notion.pages.update(
+        page_id = page_id,
+        properties = {
+        "완료": {
+            "checkbox": False,
+        },
+        },
+    )
+
+
 def update_gtd_date_next_action_pages_compete(page_id):
     notion.pages.update(
         page_id = page_id,

@@ -90,6 +90,13 @@ def close_task(task_id):
             "Authorization": "Bearer " + token
         })
 
+def reopen_task(task_id):
+    requests.post(
+        f"https://api.todoist.com/rest/v1/tasks/{task_id}/reopen", 
+        headers={
+            "Authorization": "Bearer " + token
+        })
+
 def get_all_labels():
     labels = requests.get(
         "https://api.todoist.com/rest/v1/labels", 
