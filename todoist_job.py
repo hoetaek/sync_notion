@@ -77,13 +77,13 @@ def update_date_next_action_task(task_id, title, label_ids, date):
             "Authorization": "Bearer " + token
         })
 
-def close_task(task_id):
+def delete_task(task_id):
     requests.delete(f"https://api.todoist.com/rest/v1/tasks/{task_id}", 
     headers={
         "Authorization": "Bearer " + token
     })
 
-def delete_task(task_id):
+def close_task(task_id):
     requests.post(
         f"https://api.todoist.com/rest/v1/tasks/{task_id}/close", 
         headers={
