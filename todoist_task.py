@@ -33,10 +33,6 @@ class Task(Action):
     def create(self):
         if not Task.meta_reminders_dict:
             Task.meta_reminders_dict = get_meta_reminders_dict()
-        print("reminder", self.reminder)
-        print("-" * 10)
-        print("meta_reminders_dict", Task.meta_reminders_dict)
-        print("-" * 10)
         label_ids = [Task.meta_reminders_dict[k] for k in self.reminder]
         print(label_ids)
         return create_date_next_action_task(self.page_id, self.title, label_ids, self.date)

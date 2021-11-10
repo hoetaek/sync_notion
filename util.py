@@ -45,7 +45,7 @@ def close_todoist_not_in_gtd(gtd_date_next_action_pages):
 def sync_labels2meta_reminders(gtd_date_next_action_pages):
     meta_reminder_names = list(notion_job.get_meta_reminders_dict().keys())
     reminder_to_make_in_todoist = [reminder for page in gtd_date_next_action_pages for reminder in page.reminder if reminder not in meta_reminder_names]
-    for reminder in reminder_to_make_in_todoist:
+    for reminder in set(reminder_to_make_in_todoist):
         label_id = todoist_job.create_label(reminder)["id"]
         notion_job.create_meta_reminders_page(reminder, label_id)
         Task.update_meta_reminders_dict()
