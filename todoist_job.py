@@ -118,7 +118,13 @@ def create_label(label_name):
             "Authorization": "Bearer " + token
         }).json()
     return result
-    
+
+def delete_label(label_id):
+    requests.delete(
+    f"https://api.todoist.com/rest/v1/labels/{label_id}", 
+    headers={
+        "Authorization": "Bearer " + token
+    })
 
 if __name__=="__main__":
     create_date_next_action_task("156478", "test", [2158785495, 2158785496], "2021-11-07T22:00:00.000+09:00")

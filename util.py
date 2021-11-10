@@ -43,12 +43,21 @@ def close_todoist_not_in_gtd(gtd_date_next_action_pages):
 
 
 def sync_labels2meta_reminders(gtd_date_next_action_pages):
-    meta_reminder_names = list(notion_job.get_meta_reminders_dict().keys())
-    reminder_to_make_in_todoist = [reminder for page in gtd_date_next_action_pages for reminder in page.reminder if reminder not in meta_reminder_names]
+    meta_reminders_dict = notion_job.get_meta_reminders_dict()
+    meta_reminder_names = list(meta_reminders_dict.keys())
+    gtd_reminders = [reminder for page in gtd_date_next_action_pages for reminder in page.reminder]
+    reminder_to_make_in_todoist = [reminder for reminder in gtd_reminders if reminder not in meta_reminder_names]
+    print("making meta labels")
     for reminder in set(reminder_to_make_in_todoist):
         label_id = todoist_job.create_label(reminder)["id"]
         notion_job.create_meta_reminders_page(reminder, label_id)
-        Task.update_meta_reminders_dict()
+    Task.force_update_meta_reminders_dics()
+
+    print("deleting not used labels")
+    reminders_to_delete = [(reminder_info["page_id"], reminder_info["label_id"]) for reminder_name, reminder_info in meta_reminders_dict.items() if reminder_name not in gtd_reminders]
+    for reminder_page_id, reminder_label_id in reminders_to_delete:
+        notion_job.delete_meta_reminders_page(reminder_page_id)
+        todoist_job.delete_label(reminder_label_id)
 
 if __name__=="__main__":
     sync_date_next_actions2todoist()

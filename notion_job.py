@@ -141,8 +141,15 @@ def get_meta_reminders_dict():
     reminders_dict = dict()
     for page in pages["results"]:
         if page["properties"]["실행환기"]["title"]:
-            reminders_dict[page["properties"]["실행환기"]["title"][0]["text"]["content"]] = page["properties"]["id"]["number"]
+            reminders_dict[page["properties"]["실행환기"]["title"][0]["text"]["content"]] = {"page_id": page["id"], "label_id": page["properties"]["id"]["number"]}
     return reminders_dict
+
+
+def delete_meta_reminders_page(reminder_page_id):
+    notion.pages.update(
+    page_id = reminder_page_id,
+    archived = True,
+    )
 
 if __name__=="__main__":
     pages = get_gtd_date_next_action_pages()

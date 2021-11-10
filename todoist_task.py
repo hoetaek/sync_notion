@@ -13,8 +13,7 @@ class Task(Action):
     def from_todoist(cls, todoist_obj):
         page_id = todoist_obj["description"]
         title = todoist_obj["content"]
-        if not Task.meta_reminders_dict:
-            Task.meta_reminders_dict = get_meta_reminders_dict()
+        Task.update_meta_reminders_dict()
         notion_labels = {v: k for k, v in Task.meta_reminders_dict.items()}
         reminder = [notion_labels.get(i) for i in todoist_obj["label_ids"]]
         date = todoist_obj.get("due").get("datetime") if todoist_obj.get("due") != None else None
@@ -28,21 +27,25 @@ class Task(Action):
 
     @classmethod
     def update_meta_reminders_dict(cls):
-        Task.meta_reminders_dict = get_meta_reminders_dict()
+        if not Task.meta_reminders_dict:
+            Task.meta_reminders_dict = {k: v["label_id"] for k, v in get_meta_reminders_dict().items()}
+
+    @classmethod
+    def force_update_meta_reminders_dics(cls):
+        Task.meta_reminders_dict = {k: v["label_id"] for k, v in get_meta_reminders_dict().items()}
 
     def create(self):
-        if not Task.meta_reminders_dict:
-            Task.meta_reminders_dict = get_meta_reminders_dict()
+        Task.update_meta_reminders_dict()
         label_ids = [Task.meta_reminders_dict[k] for k in self.reminder]
         print(label_ids)
         return create_date_next_action_task(self.page_id, self.title, label_ids, self.date)
 
     def update(self):
-        if not Task.meta_reminders_dict:
-            Task.meta_reminders_dict = get_meta_reminders_dict()
+        Task.update_meta_reminders_dict()
         label_ids = [Task.meta_reminders_dict[k] for k in self.reminder]
         update_date_next_action_task(self.task_id, self.title, label_ids, self.date)
         if self.checked == True:
+            print("unchecked")
             reopen_task(self.task_id)
             reopen_gtd_date_next_action_page(self.page_id)
 
