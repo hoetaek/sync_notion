@@ -2,12 +2,12 @@ from notion_client import Client
 from os import environ
 from datetime import datetime
 from pprint import pprint
-from constants import gtd_database_id, stock_database_id, meta_reminders_database_id
+from constants import gtd_database_id, stock_database_id, meta_reminders_database_id, incubating_database_id
 
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
 
-
+################ stock ################
 def get_pages_from_stock_db():
     pages = notion.databases.query(stock_database_id)
     stock_names = [page["properties"]["종목명"]["title"][0]["text"]["content"] for page in pages["results"]]
@@ -33,6 +33,7 @@ def create_stock_page(stock_name):
             },
         )
 
+################ gtd ################
 def create_gtd_collect_page(title):
     page = notion.pages.create(
         parent= {
@@ -113,6 +114,24 @@ def update_gtd_date_next_action_pages_compete(page_id):
         },
     )
 
+################ Incubating ################
+def get_incubating_pages():
+    result = notion.databases.query(incubating_database_id, filter={
+        "and": [{ 
+            "property": "상태", 
+            "multi_select": {
+            "contains": "티클러 파일"
+            }},
+           {
+            "property": "검토",
+            "date": {
+                "equals": "다음 행동"
+            }}
+            ]
+})
+    return result["results"]
+
+################ meta reminder ################
 def create_meta_reminders_page(reminder, label_id):
     page = notion.pages.create(
         parent= {
