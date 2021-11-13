@@ -11,7 +11,6 @@ class Action(object, metaclass=ABCMeta):
         self.task_id = task_id
         self.checked = checked
 
-
     def __str__(self) -> str:
         return str(self.__dict__)
 

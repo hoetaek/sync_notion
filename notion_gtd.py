@@ -1,5 +1,10 @@
 from abstract_action import Action
-from notion_job import create_gtd_collect_page, get_gtd_date_next_action_pages, update_gtd_date_next_action_pages_compete, update_gtd_date_next_action_pages_todoist_id
+from notion_job import (
+    create_gtd_collect_page,
+    get_gtd_date_next_action_pages,
+    update_gtd_date_next_action_pages_compete,
+    update_gtd_date_next_action_pages_todoist_id,
+)
 
 
 class GTD(Action):
@@ -22,7 +27,6 @@ class GTD(Action):
     def from_todoist(cls, todoist):
         return cls(**todoist.__dict__)
 
-    
     @classmethod
     def from_webhook(cls, item):
         task_id = item["event_data"]["id"]
@@ -30,12 +34,10 @@ class GTD(Action):
         page_id = item["event_data"]["description"]
         return cls(page_id, title, None, None, task_id)
 
-
     def is_at_todoist(self):
         if self.task_id:
             return True
         return False
-
 
     def create(self):
         return create_gtd_collect_page(self.title)
@@ -48,10 +50,10 @@ class GTD(Action):
             update_gtd_date_next_action_pages_compete(self.page_id)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     result = get_gtd_date_next_action_pages()
     from pprint import pprint
-    
+
     for page_obj in result:
         page_id = page_obj["id"]
         title = page_obj["properties"]["이름"]["title"][0]["text"]["content"]

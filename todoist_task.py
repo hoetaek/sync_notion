@@ -1,6 +1,12 @@
 from abstract_action import Action
 from notion_job import get_meta_reminders_dict, reopen_gtd_date_next_action_page
-from todoist_job import create_date_next_action_task, delete_task, reopen_task, update_date_next_action_task, close_task
+from todoist_job import (
+    create_date_next_action_task,
+    delete_task,
+    reopen_task,
+    update_date_next_action_task,
+    close_task,
+)
 
 
 class Task(Action):
@@ -16,7 +22,11 @@ class Task(Action):
         Task.update_meta_reminders_dict()
         notion_labels = {v: k for k, v in Task.meta_reminders_dict.items()}
         reminder = [notion_labels.get(i) for i in todoist_obj["label_ids"]]
-        date = todoist_obj.get("due").get("datetime") if todoist_obj.get("due") != None else None
+        date = (
+            todoist_obj.get("due").get("datetime")
+            if todoist_obj.get("due") != None
+            else None
+        )
         task_id = todoist_obj["id"]
         return cls(page_id, title, reminder, date, task_id)
 
@@ -24,21 +34,26 @@ class Task(Action):
     def from_gtd(cls, gtd):
         return cls(**gtd.__dict__)
 
-
     @classmethod
     def update_meta_reminders_dict(cls):
         if not Task.meta_reminders_dict:
-            Task.meta_reminders_dict = {k: v["label_id"] for k, v in get_meta_reminders_dict().items()}
+            Task.meta_reminders_dict = {
+                k: v["label_id"] for k, v in get_meta_reminders_dict().items()
+            }
 
     @classmethod
     def force_update_meta_reminders_dics(cls):
-        Task.meta_reminders_dict = {k: v["label_id"] for k, v in get_meta_reminders_dict().items()}
+        Task.meta_reminders_dict = {
+            k: v["label_id"] for k, v in get_meta_reminders_dict().items()
+        }
 
     def create(self):
         Task.update_meta_reminders_dict()
         label_ids = [Task.meta_reminders_dict[k] for k in self.reminder]
         print(label_ids)
-        return create_date_next_action_task(self.page_id, self.title, label_ids, self.date)
+        return create_date_next_action_task(
+            self.page_id, self.title, label_ids, self.date
+        )
 
     def update(self):
         Task.update_meta_reminders_dict()

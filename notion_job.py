@@ -10,130 +10,122 @@ notion = Client(auth=token)
 
 def get_pages_from_stock_db():
     pages = notion.databases.query(stock_database_id)
-    stock_names = [page["properties"]["종목명"]["title"][0]["text"]["content"] for page in pages["results"]]
+    stock_names = [
+        page["properties"]["종목명"]["title"][0]["text"]["content"]
+        for page in pages["results"]
+    ]
     return stock_names
 
 
 def create_stock_page(stock_name):
     notion.pages.create(
-        parent= {
-            'database_id': stock_database_id,
-            },
-        properties= {
-            '종목명': {
-                'title': [
+        parent={
+            "database_id": stock_database_id,
+        },
+        properties={
+            "종목명": {
+                "title": [
                     {
-                        'text': {
-                        'content': stock_name,
+                        "text": {
+                            "content": stock_name,
                         },
-                        }
-                    ],
-                },
-            '보유 여부': {'checkbox': True},
+                    }
+                ],
             },
-        )
+            "보유 여부": {"checkbox": True},
+        },
+    )
+
 
 def create_gtd_collect_page(title):
     page = notion.pages.create(
-        parent= {
-            'database_id': gtd_database_id,
-            },
-        properties= {
-            '이름': {
-                'title': [
+        parent={
+            "database_id": gtd_database_id,
+        },
+        properties={
+            "이름": {
+                "title": [
                     {
-                        'text': {
-                        'content': title,
+                        "text": {
+                            "content": title,
                         },
-                        }
-                    ],
-                },
-            '상태': {
-                'select': {
-                    'color': 'pink',
-                    'name': '-----수집함-----'
-                }
+                    }
+                ],
             },
-            },
-        )
-    return page['id']
+            "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
+        },
+    )
+    return page["id"]
 
 
 def get_gtd_date_next_action_pages():
-    result = notion.databases.query(gtd_database_id, filter={
-        "or": [{ 
-            "property": "상태", 
-            "select": {
-            "equals": "일정"
-            }},
-           {
-            "property": "상태",
-            "select": {
-                "equals": "다음 행동"
-            }}
+    result = notion.databases.query(
+        gtd_database_id,
+        filter={
+            "or": [
+                {"property": "상태", "select": {"equals": "일정"}},
+                {"property": "상태", "select": {"equals": "다음 행동"}},
             ]
-})
+        },
+    )
     return result["results"]
+
 
 def update_gtd_date_next_action_pages_todoist_id(page_id, task_id):
     notion.pages.update(
-        page_id = page_id,
-        properties = {
-        "Todoist id": {
-            "number": task_id,
-        },
+        page_id=page_id,
+        properties={
+            "Todoist id": {
+                "number": task_id,
+            },
         },
     )
 
 
 def reopen_gtd_date_next_action_page(page_id):
-     notion.pages.update(
-        page_id = page_id,
-        properties = {
-        "완료": {
-            "checkbox": False,
-        },
+    notion.pages.update(
+        page_id=page_id,
+        properties={
+            "완료": {
+                "checkbox": False,
+            },
         },
     )
 
 
 def update_gtd_date_next_action_pages_compete(page_id):
     notion.pages.update(
-        page_id = page_id,
-        properties = {
-        "상태": {
-            "select": {
-                    'color': 'brown',
-                    'name': 'Done'
-                },
-        },
-        "완료" : {
-            "checkbox": True,
-        }
+        page_id=page_id,
+        properties={
+            "상태": {
+                "select": {"color": "brown", "name": "Done"},
+            },
+            "완료": {
+                "checkbox": True,
+            },
         },
     )
 
+
 def create_meta_reminders_page(reminder, label_id):
     page = notion.pages.create(
-        parent= {
-            'database_id': meta_reminders_database_id,
-            },
-        properties= {
-            '실행환기': {
-                'title': [
+        parent={
+            "database_id": meta_reminders_database_id,
+        },
+        properties={
+            "실행환기": {
+                "title": [
                     {
-                        'text': {
-                        'content': reminder,
+                        "text": {
+                            "content": reminder,
                         },
-                        }
-                    ],
-                },
-            'id': {
-                'number': label_id
+                    }
+                ],
             },
-            },
-        )
-    return page['id']
+            "id": {"number": label_id},
+        },
+    )
+    return page["id"]
 
 
 def get_meta_reminders_dict():
@@ -141,17 +133,20 @@ def get_meta_reminders_dict():
     reminders_dict = dict()
     for page in pages["results"]:
         if page["properties"]["실행환기"]["title"]:
-            reminders_dict[page["properties"]["실행환기"]["title"][0]["text"]["content"]] = {"page_id": page["id"], "label_id": page["properties"]["id"]["number"]}
+            reminders_dict[
+                page["properties"]["실행환기"]["title"][0]["text"]["content"]
+            ] = {"page_id": page["id"], "label_id": page["properties"]["id"]["number"]}
     return reminders_dict
 
 
 def delete_meta_reminders_page(reminder_page_id):
     notion.pages.update(
-    page_id = reminder_page_id,
-    archived = True,
+        page_id=reminder_page_id,
+        archived=True,
     )
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     pages = get_gtd_date_next_action_pages()
     pprint(pages)
 
@@ -159,12 +154,12 @@ if __name__=="__main__":
 # 일정은 defaults
 
 # date_pages = notion.databases.query(database_id, filter={
-#         "property": "상태", 
+#         "property": "상태",
 #         "select": {
 #         "equals": "일정"
 #         }})
 # next_action_pages = notion.databases.query(database_id, filter={
-#         "property": "상태", 
+#         "property": "상태",
 #         "select": {
 #         "equals": "다음 행동"
 #         }})
