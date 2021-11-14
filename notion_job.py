@@ -2,7 +2,13 @@ from notion_client import Client
 from os import environ
 from datetime import datetime
 from pprint import pprint
-from constants import gtd_database_id, stock_database_id, meta_reminders_database_id, incubating_database_id, color_dict
+from constants import (
+    gtd_database_id,
+    stock_database_id,
+    meta_reminders_database_id,
+    incubating_database_id,
+    color_dict,
+)
 
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
@@ -40,18 +46,17 @@ def create_stock_page(stock_name):
 ################ gtd ################
 def create_gtd_collect_page(title, date=None):
     property_data = {
-            "이름": {
-                "title": [
-                    {
-                        "text": {
-                            "content": title,
-                        },
-                    }
-                ],
-            },
-            "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
-
-        }
+        "이름": {
+            "title": [
+                {
+                    "text": {
+                        "content": title,
+                    },
+                }
+            ],
+        },
+        "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
+    }
 
     if date:
         if len(date) > 10:
@@ -114,22 +119,20 @@ def update_gtd_date_next_action_pages_compete(page_id):
         },
     )
 
+
 ################ Incubating ################
 def get_incubating_pages():
-    result = notion.databases.query(incubating_database_id, filter={
-        "and": [{ 
-            "property": "상태", 
-            "multi_select": {
-            "contains": "티클러 파일"
-            }},
-           {
-            "property": "검토",
-            "date": {
-                "equals": "다음 행동"
-            }}
+    result = notion.databases.query(
+        incubating_database_id,
+        filter={
+            "and": [
+                {"property": "상태", "multi_select": {"contains": "티클러 파일"}},
+                {"property": "검토", "date": {"equals": "다음 행동"}},
             ]
-})
+        },
+    )
     return result["results"]
+
 
 ################ meta reminder ################
 def create_meta_reminders_page(reminder, label_id, color_id):
@@ -151,9 +154,9 @@ def create_meta_reminders_page(reminder, label_id, color_id):
             "id": {"number": label_id},
             "color": {
                 "select": {
-                "name": color,
-            }
-            }
+                    "name": color,
+                }
+            },
         },
     )
     return page["id"]
@@ -168,7 +171,11 @@ def get_meta_reminders_dict():
             color_id = color_dict[select_value["name"]] if select_value else None
             reminders_dict[
                 page["properties"]["실행환기"]["title"][0]["text"]["content"]
-            ] = {"page_id": page["id"], "label_id": page["properties"]["id"]["number"], "color_id": color_id}
+            ] = {
+                "page_id": page["id"],
+                "label_id": page["properties"]["id"]["number"],
+                "color_id": color_id,
+            }
     # name: {"page_id": page_id, "label_id": label_id, "color_id": color_id}
     return reminders_dict
 
@@ -181,7 +188,17 @@ def delete_meta_reminders_page(reminder_page_id):
 
 
 if __name__ == "__main__":
-    colors = ["gray", "brown", "red", "orange", "yellow", "green", "blue", "purple", "pink"]
+    colors = [
+        "gray",
+        "brown",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple",
+        "pink",
+    ]
     for color in colors:
         try:
             create_meta_reminders_page("test", 2332, color)

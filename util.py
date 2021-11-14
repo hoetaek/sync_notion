@@ -20,8 +20,8 @@ def update_notion_stocks():
 
 def handle_webhook_task(item):
     if item["event_name"] == "item:completed" and item["event_data"]["description"]:
-            gtd = GTD.from_webhook(item)
-            gtd.complete()
+        gtd = GTD.from_webhook(item)
+        gtd.complete()
     elif (
         item["event_name"] == "item:added"
         and item["event_data"]["project_id"] == inbox_project_id
@@ -30,6 +30,7 @@ def handle_webhook_task(item):
         gtd.create()
         task = Task.from_gtd(gtd)
         task.delete()
+
 
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()
@@ -79,7 +80,9 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
     ]
     # {"name": name, "color_id": color_id}
     print("making meta labels")
-    for reminder in [dict(t) for t in {tuple(d.items()) for d in reminder_to_make_in_todoist}]:
+    for reminder in [
+        dict(t) for t in {tuple(d.items()) for d in reminder_to_make_in_todoist}
+    ]:
         # TODO give the right color for reminder
         label_id = todoist_job.create_label(reminder["name"], reminder["color_id"])[
             "id"

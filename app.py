@@ -2,7 +2,11 @@ from flask import Flask, request, abort
 from multiprocessing import Process
 from pprint import pprint
 
-from util import sync_date_next_actions2todoist, update_notion_stocks, handle_webhook_task
+from util import (
+    sync_date_next_actions2todoist,
+    update_notion_stocks,
+    handle_webhook_task,
+)
 
 
 app = Flask(__name__)

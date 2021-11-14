@@ -20,9 +20,18 @@ class Task(Action):
         page_id = todoist_obj["description"]
         title = todoist_obj["content"]
         Task.update_meta_reminders_dict()
-        notion_labels_by_id = {v["label_id"]: {"color": v["color_id"],"name": k} for k, v in Task.meta_reminders_dict.items()}
+        notion_labels_by_id = {
+            v["label_id"]: {"color": v["color_id"], "name": k}
+            for k, v in Task.meta_reminders_dict.items()
+        }
         # TODO how do you get color id?
-        reminder = [{"name": notion_labels_by_id.get(label_id).get("name") , "color_id": notion_labels_by_id.get(label_id).get("color_id")} for label_id in todoist_obj["label_ids"]]
+        reminder = [
+            {
+                "name": notion_labels_by_id.get(label_id).get("name"),
+                "color_id": notion_labels_by_id.get(label_id).get("color_id"),
+            }
+            for label_id in todoist_obj["label_ids"]
+        ]
         date = (
             todoist_obj.get("due").get("datetime")
             if todoist_obj.get("due") != None
@@ -39,18 +48,22 @@ class Task(Action):
     def update_meta_reminders_dict(cls):
         if not Task.meta_reminders_dict:
             Task.meta_reminders_dict = {
-                k: {"label_id": v["label_id"], "color_id": v["color_id"]} for k, v in get_meta_reminders_dict().items()
+                k: {"label_id": v["label_id"], "color_id": v["color_id"]}
+                for k, v in get_meta_reminders_dict().items()
             }
 
     @classmethod
     def force_update_meta_reminders_dics(cls):
         Task.meta_reminders_dict = {
-                k: {"label_id": v["label_id"], "color_id": v["color_id"]} for k, v in get_meta_reminders_dict().items()
-            }
+            k: {"label_id": v["label_id"], "color_id": v["color_id"]}
+            for k, v in get_meta_reminders_dict().items()
+        }
 
     def create(self):
         Task.update_meta_reminders_dict()
-        label_ids = [Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder]
+        label_ids = [
+            Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder
+        ]
         print(label_ids)
         return create_date_next_action_task(
             self.page_id, self.title, label_ids, self.date
@@ -58,7 +71,9 @@ class Task(Action):
 
     def update(self):
         Task.update_meta_reminders_dict()
-        label_ids = [Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder]
+        label_ids = [
+            Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder
+        ]
         update_date_next_action_task(self.task_id, self.title, label_ids, self.date)
         if self.checked == True:
             print("unchecked")
