@@ -43,6 +43,7 @@ def sync_date_next_actions2todoist():
         task = Task.from_gtd(page)
         # if at todoist update the details
         if page.is_at_todoist():
+            print("updating: ", page.title)
             task.update()
         # if not at todoist make todoist task
         else:
