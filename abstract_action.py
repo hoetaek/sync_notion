@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import List, Dict
 
 
 class Action(object, metaclass=ABCMeta):
@@ -6,7 +7,7 @@ class Action(object, metaclass=ABCMeta):
     def __init__(self, page_id, title, reminder, date, task_id, checked=False):
         self.page_id = page_id
         self.title = title
-        self.reminder = reminder
+        self.reminder: List[Dict[str]] = reminder
         self.date = date
         self.task_id = task_id
         self.checked = checked

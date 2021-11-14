@@ -5,6 +5,7 @@ from notion_job import (
     update_gtd_date_next_action_pages_compete,
     update_gtd_date_next_action_pages_todoist_id,
 )
+from constants import color_dict
 
 
 class GTD(Action):
@@ -15,7 +16,7 @@ class GTD(Action):
     def from_notion(cls, page_obj):
         page_id = page_obj["id"]
         title = page_obj["properties"]["이름"]["title"][0]["text"]["content"]
-        reminder = [i["name"] for i in page_obj["properties"]["실행 환기"]["multi_select"]]
+        reminder = [{"name": i["name"], "color_id": color_dict[i["color"]]} for i in page_obj["properties"]["실행 환기"]["multi_select"]]
         date = None
         if page_obj["properties"]["일정"]["date"] != None:
             date = page_obj["properties"]["일정"]["date"]["start"]

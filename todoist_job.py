@@ -1,5 +1,4 @@
 from os import environ
-from pprint import pprint
 import requests, uuid, json
 from constants import inbox_project_id, date_next_action_project_id
 
@@ -105,10 +104,10 @@ def get_all_labels():
     return labels
 
 
-def create_label(label_name):
+def create_label(label_name, color_id):
     result = requests.post(
         "https://api.todoist.com/rest/v1/labels",
-        data=json.dumps({"name": label_name}),
+        data=json.dumps({"name": label_name, "color": color_id}),
         headers={
             "Content-Type": "application/json",
             "X-Request-Id": str(uuid.uuid4()),

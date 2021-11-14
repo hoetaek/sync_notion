@@ -4,3 +4,12 @@ meta_reminders_database_id = "9392816f03e142ee959e13ca5059a5dd"
 incubating_database_id = "3f49dda1f0ae4659954deda2056137bc"
 inbox_project_id = 2169583011
 date_next_action_project_id = 2169583014
+
+color_dict = {
+    "purple": 42,
+    "green": 34,
+    "pink": 44,
+    "brown": 49,
+    "red": 31,
+    "yellow": 33,
+}
