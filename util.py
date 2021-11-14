@@ -3,8 +3,8 @@ import notion_job
 import todoist_job
 from notion_gtd import GTD
 from todoist_task import Task
-import json, os
-from typing import List, Dict
+from typing import List
+from constants import inbox_project_id
 
 
 def update_notion_stocks():
@@ -17,6 +17,19 @@ def update_notion_stocks():
     for stock in new_stocks:
         notion_job.create_stock_page(stock)
 
+
+def handle_webhook_task(item):
+    if item["event_name"] == "item:completed" and item["event_data"]["description"]:
+            gtd = GTD.from_webhook(item)
+            gtd.complete()
+    elif (
+        item["event_name"] == "item:added"
+        and item["event_data"]["project_id"] == inbox_project_id
+    ):
+        gtd = GTD.from_webhook(item)
+        gtd.create()
+        task = Task.from_gtd(gtd)
+        task.delete()
 
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()

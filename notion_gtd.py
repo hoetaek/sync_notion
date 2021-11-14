@@ -32,8 +32,10 @@ class GTD(Action):
     def from_webhook(cls, item):
         task_id = item["event_data"]["id"]
         title = item["event_data"]["content"]
+        due_data = item["event_data"].get("due")
+        date = due_data["date"] if due_data != None else None
         page_id = item["event_data"]["description"]
-        return cls(page_id, title, None, None, task_id)
+        return cls(page_id, title, None, date, task_id)
 
     def is_at_todoist(self):
         if self.task_id:
@@ -41,7 +43,7 @@ class GTD(Action):
         return False
 
     def create(self):
-        return create_gtd_collect_page(self.title)
+        return create_gtd_collect_page(self.title, self.date)
 
     def update(self):
         update_gtd_date_next_action_pages_todoist_id(self.page_id, self.task_id)

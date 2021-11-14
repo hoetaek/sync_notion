@@ -38,12 +38,8 @@ def create_stock_page(stock_name):
 
 
 ################ gtd ################
-def create_gtd_collect_page(title):
-    page = notion.pages.create(
-        parent={
-            "database_id": gtd_database_id,
-        },
-        properties={
+def create_gtd_collect_page(title, date=None):
+    property_data = {
             "이름": {
                 "title": [
                     {
@@ -54,7 +50,18 @@ def create_gtd_collect_page(title):
                 ],
             },
             "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
+
+        }
+
+    if date:
+        if len(date) > 10:
+            date = date + ".000+09:00"
+        property_data["일정"] = {"date": {"start": date}}
+    page = notion.pages.create(
+        parent={
+            "database_id": gtd_database_id,
         },
+        properties=property_data,
     )
     return page["id"]
 
