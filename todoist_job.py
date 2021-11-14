@@ -1,7 +1,10 @@
+import json
+import uuid
 from os import environ
-import requests, uuid, json
-from constants import inbox_project_id, date_next_action_project_id
 
+import requests
+
+from constants import date_next_action_project_id, inbox_project_id
 
 token = environ["TODOIST_TOKEN"]
 

@@ -1,13 +1,13 @@
-from flask import Flask, request, abort
 from multiprocessing import Process
 from pprint import pprint
 
-from util import (
-    sync_date_next_actions2todoist,
-    update_notion_stocks,
-    handle_webhook_task,
-)
+from flask import Flask, abort, request
 
+from util import (
+    handle_webhook_task,
+    notion2todoist_notion_cleanup,
+    update_notion_stocks,
+)
 
 app = Flask(__name__)
 
@@ -35,7 +35,7 @@ def todoist():
 @app.route("/todoist/next-actions")
 def notion2todoist():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
-        target=sync_date_next_actions2todoist, daemon=True
+        target=notion2todoist_notion_cleanup, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

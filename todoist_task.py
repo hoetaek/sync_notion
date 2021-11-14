@@ -1,11 +1,11 @@
 from abstract_action import Action
 from notion_job import get_meta_reminders_dict, reopen_gtd_date_next_action_page
 from todoist_job import (
+    close_task,
     create_date_next_action_task,
     delete_task,
     reopen_task,
     update_date_next_action_task,
-    close_task,
 )
 
 

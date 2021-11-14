@@ -1,5 +1,6 @@
-import gspread
 from os import environ
+
+import gspread
 
 credentials = {
     "type": "service_account",

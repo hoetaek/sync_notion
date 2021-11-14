@@ -1,11 +1,11 @@
 from abstract_action import Action
+from constants import color_dict
 from notion_job import (
     create_gtd_collect_page,
     get_gtd_date_next_action_pages,
     update_gtd_date_next_action_pages_compete,
     update_gtd_date_next_action_pages_todoist_id,
 )
-from constants import color_dict
 
 
 class GTD(Action):

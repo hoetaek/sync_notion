@@ -1,10 +1,11 @@
+from typing import List
+
 import gsheet_func
 import notion_job
 import todoist_job
+from constants import inbox_project_id
 from notion_gtd import GTD
 from todoist_task import Task
-from typing import List
-from constants import inbox_project_id
 
 
 def update_notion_stocks():
@@ -32,9 +33,24 @@ def handle_webhook_task(item):
         task.delete()
 
 
+def notion2todoist_notion_cleanup():
+    sync_date_next_actions2todoist()
+    send_tickler2collection()
+
+
+def send_tickler2collection():
+    page_results = notion_job.get_incubating_pages()
+    for page in page_results:
+        if page["properties"]["Name"]["title"]:
+            title = page["properties"]["Name"]["title"][0]["text"]["content"]
+            notion_job.create_gtd_collect_page(title)
+
+
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()
-    gtd_date_next_action_pages = [GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]]
+    gtd_date_next_action_pages = [
+        GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]
+    ]
     print("closing todoist which is not in gtd")
     close_todoist_not_in_gtd(gtd_date_next_action_pages)
     print("syncing todoist labels with gtd reminders")
@@ -43,7 +59,6 @@ def sync_date_next_actions2todoist():
         task = Task.from_gtd(page)
         # if at todoist update the details
         if page.is_at_todoist():
-            print("updating: ", page.title)
             task.update()
         # if not at todoist make todoist task
         else:
