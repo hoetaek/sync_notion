@@ -62,6 +62,7 @@ def sync_date_next_actions2todoist():
             task.update()
         # if not at todoist make todoist task
         else:
+            print(task)
             result = task.create()
             task_id = result["id"]
             page.task_id = task_id
