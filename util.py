@@ -51,28 +51,33 @@ def sync_date_next_actions2todoist():
     gtd_date_next_action_pages = [
         GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]
     ]
+    date_next_action_tasks = [
+        Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
+    ]
     print("closing todoist which is not in gtd")
-    close_todoist_not_in_gtd(gtd_date_next_action_pages)
+    close_todoist_not_in_gtd(date_next_action_tasks, gtd_date_next_action_pages)
     print("syncing todoist labels with gtd reminders")
     sync_labels2meta_reminders(gtd_date_next_action_pages)
+
+    date_next_action_task_titles = [task.title for task in date_next_action_tasks]
     for page in gtd_date_next_action_pages:
         task = Task.from_gtd(page)
-        # if at todoist update the details
-        if page.is_at_todoist():
-            task.update()
         # if not at todoist make todoist task
-        else:
+        if not page.is_at_todoist():
             print(task)
             result = task.create()
             task_id = result["id"]
             page.task_id = task_id
             page.update()
+        # if at todoist and detail changes update the details
+        elif task.title not in date_next_action_task_titles:
+            print("updating", task)
+            task.update()
+        else:
+            print("task doesn't need update")
 
 
-def close_todoist_not_in_gtd(gtd_date_next_action_pages):
-    date_next_action_tasks = [
-        Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
-    ]
+def close_todoist_not_in_gtd(date_next_action_tasks, gtd_date_next_action_pages):
     for task in date_next_action_tasks:
         if task not in gtd_date_next_action_pages:
             task.close()
@@ -100,7 +105,7 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
     for reminder in [
         dict(t) for t in {tuple(d.items()) for d in reminder_to_make_in_todoist}
     ]:
-        # TODO give the right color for reminder
+
         label_id = todoist_job.create_label(reminder["name"], reminder["color_id"])[
             "id"
         ]
