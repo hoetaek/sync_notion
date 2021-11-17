@@ -131,6 +131,5 @@ def delete_label(label_id):
 
 
 if __name__ == "__main__":
-    create_date_next_action_task(
-        "156478", "test", [2158785495, 2158785496], "2021-11-07T22:00:00.000+09:00"
-    )
+    from pprint import pprint
+    pprint(get_date_next_action_tasks())

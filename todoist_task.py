@@ -32,11 +32,14 @@ class Task(Action):
             }
             for label_id in todoist_obj["label_ids"]
         ]
-        date = (
-            todoist_obj.get("due").get("datetime")
-            if todoist_obj.get("due") != None
-            else None
-        )
+        if todoist_obj.get("due") != None:
+            if todoist_obj.get("due").get("datetime") != None:
+                date = todoist_obj.get("due").get("datetime")
+            else:
+                date = todoist_obj.get("due").get("date")
+        else:
+            date = None
+
         task_id = todoist_obj["id"]
         return cls(page_id, title, reminder, date, task_id)
 

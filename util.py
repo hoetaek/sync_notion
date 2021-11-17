@@ -59,10 +59,11 @@ def sync_date_next_actions2todoist():
     print("syncing todoist labels with gtd reminders")
     sync_labels2meta_reminders(gtd_date_next_action_pages)
 
-    date_next_action_task_titles = [task.title for task in date_next_action_tasks]
-    date_next_action_task_dates = [task.date for task in date_next_action_tasks]
+    # date_next_action_task_titles = [task.title for task in date_next_action_tasks]
+    # date_next_action_task_dates = [task.date for task in date_next_action_tasks]
     for page in gtd_date_next_action_pages:
         task = Task.from_gtd(page)
+        task_from_todoist = next((x for x in date_next_action_tasks if x == task), None)
         # if not at todoist make todoist task
         if not page.is_at_todoist():
             print(task)
@@ -71,8 +72,10 @@ def sync_date_next_actions2todoist():
             page.task_id = task_id
             page.update()
         # if at todoist and detail changes update the details
-        elif task.title not in date_next_action_task_titles or task.date not in date_next_action_task_dates:
+        elif task.title != task_from_todoist.title or task.date != task_from_todoist.date:
             print("updating", task)
+            print(task.date, task_from_todoist.date)
+            print("*"*20)
             task.update()
         else:
             print("task doesn't need update")
