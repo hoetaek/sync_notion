@@ -5,7 +5,7 @@ from flask import Flask, abort, request
 
 from util import (
     handle_webhook_task,
-    notion2todoist_notion_cleanup,
+    notion2todoist_and_notion_cleanup,
     update_notion_stocks,
 )
 
@@ -35,7 +35,7 @@ def todoist():
 @app.route("/todoist/next-actions")
 def notion2todoist():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
-        target=notion2todoist_notion_cleanup, daemon=True
+        target=notion2todoist_and_notion_cleanup, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

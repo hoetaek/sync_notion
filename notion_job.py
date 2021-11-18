@@ -72,6 +72,44 @@ def create_gtd_collect_page(title, date=None, property_extra_data=None):
     return page["id"]
 
 
+def create_errorpage_in_gtd_collect(errormessage):
+    property_data = {
+        "이름": {
+            "title": [
+                {
+                    "text": {
+                        "content": "error at "
+                        + datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    },
+                }
+            ],
+        },
+        "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
+    }
+
+    page = notion.pages.create(
+        parent={
+            "database_id": gtd_database_id,
+        },
+        properties=property_data,
+        children=[{
+            "object": "block",
+            "type": "paragraph",
+            "paragraph": {
+                "text": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "content": errormessage,
+                        },
+                    },
+                ],
+            },
+        },]
+    )
+    return page["id"]
+
+
 def get_gtd_date_next_action_pages():
     result = notion.databases.query(
         gtd_database_id,

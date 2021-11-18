@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from typing import List
+import traceback
 
 import gsheet_func
 import notion_job
@@ -34,9 +35,12 @@ def handle_webhook_task(item):
         task.delete()
 
 
-def notion2todoist_notion_cleanup():
-    sync_date_next_actions2todoist()
-    send_tickler2collection()
+def notion2todoist_and_notion_cleanup():
+    try:
+        sync_date_next_actions2todoist()
+        send_tickler2collection()
+    except Exception:
+        notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
 
 def send_tickler2collection():
@@ -147,4 +151,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    sync_date_next_actions2todoist()
+    notion2todoist_and_notion_cleanup()
