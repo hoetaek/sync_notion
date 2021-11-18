@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from abstract_action import Action
 from constants import color_dict
 from notion_job import (
@@ -6,7 +8,6 @@ from notion_job import (
     update_gtd_date_next_action_pages_compete,
     update_gtd_date_next_action_pages_todoist_id,
 )
-from datetime import datetime
 
 
 class GTD(Action):
@@ -38,7 +39,7 @@ class GTD(Action):
         title = item["event_data"]["content"]
         due_data = item["event_data"].get("due")
         date = due_data["date"] if due_data != None else None
-        date = date if date != datetime.today().strftime('%Y-%m-%d') else None
+        date = date if date != datetime.today().strftime("%Y-%m-%d") else None
         page_id = item["event_data"]["description"]
         return cls(page_id, title, None, date, task_id)
 

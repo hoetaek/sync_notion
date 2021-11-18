@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import datetime, timedelta
 from os import environ
 
 import requests
@@ -66,11 +67,16 @@ def update_date_next_action_task(task_id, title, label_ids, date):
         "content": title,
         "label_ids": label_ids,
     }
-    if date and len(date) == 10:
+    if not date:
+        task_data["due_string"] = "no date"
+    elif len(date) == 10:
         task_data["due_date"] = date
     else:
-        task_data["due_datetime"] = date
-    requests.post(
+        task_data["due_datetime"] = datetime.strptime(
+            date, "%Y-%m-%dT%H:%M:%S.%f+09:00"
+        ).isoformat()
+
+    r = requests.post(
         "https://api.todoist.com/rest/v1/tasks/" + str(task_id),
         data=json.dumps(task_data),
         headers={
@@ -79,6 +85,7 @@ def update_date_next_action_task(task_id, title, label_ids, date):
             "Authorization": "Bearer " + token,
         },
     )
+    print(r)
 
 
 def delete_task(task_id):
@@ -132,4 +139,5 @@ def delete_label(label_id):
 
 if __name__ == "__main__":
     from pprint import pprint
+
     pprint(get_date_next_action_tasks())

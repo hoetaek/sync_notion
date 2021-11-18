@@ -127,10 +127,7 @@ def get_incubating_pages():
         incubating_database_id,
         filter={
             "and": [
-                {
-                    "property": "상태",
-                    "select": {"equals": "티클러 파일"}
-                },
+                {"property": "상태", "select": {"equals": "티클러 파일"}},
                 {
                     "property": "검토",
                     "date": {"on_or_before": datetime.now().isoformat()},
