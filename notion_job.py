@@ -92,20 +92,22 @@ def create_errorpage_in_gtd_collect(errormessage):
             "database_id": gtd_database_id,
         },
         properties=property_data,
-        children=[{
-            "object": "block",
-            "type": "paragraph",
-            "paragraph": {
-                "text": [
-                    {
-                        "type": "text",
-                        "text": {
-                            "content": errormessage,
+        children=[
+            {
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "text": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": errormessage,
+                            },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },]
+        ],
     )
     return page["id"]
 
