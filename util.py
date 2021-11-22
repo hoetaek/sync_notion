@@ -10,15 +10,15 @@ from notion_gtd import GTD
 from todoist_task import Task
 
 
-def update_notion_stocks():
-    stocks_from_sheet = list(set(gsheet_func.get_sheet_stocks()))
-    stocks_from_db = notion_job.get_pages_from_stock_db()
+# def update_notion_stocks():
+#     stocks_from_sheet = list(set(gsheet_func.get_sheet_stocks()))
+#     stocks_from_db = notion_job.get_pages_from_stock_db()
 
-    new_stocks = [i for i in stocks_from_sheet if i not in stocks_from_db]
-    print(new_stocks)
+#     new_stocks = [i for i in stocks_from_sheet if i not in stocks_from_db]
+#     print(new_stocks)
 
-    for stock in new_stocks:
-        notion_job.create_stock_page(stock)
+#     for stock in new_stocks:
+#         notion_job.create_stock_page(stock)
 
 
 def handle_webhook_task(item):

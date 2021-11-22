@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
-        target=update_notion_stocks, daemon=True
-    )
-    heavy_process.start()
+    # heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+    #     target=update_notion_stocks, daemon=True
+    # )
+    # heavy_process.start()
     return "<script>window.onload = window.close();</script>"
 
 
