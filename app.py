@@ -6,7 +6,6 @@ from flask import Flask, abort, request
 from util import (
     handle_webhook_task,
     notion2todoist_and_notion_cleanup,
-    update_notion_stocks,
 )
 
 app = Flask(__name__)
