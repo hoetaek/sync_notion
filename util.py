@@ -75,12 +75,20 @@ def sync_date_next_actions2todoist():
         )
         task_from_todoist = next((x for x in date_next_action_tasks if x == task), None)
         if task_from_todoist:
-            task_from_todoist_date = (
-                datetime.strptime(task_from_todoist.date, "%Y-%m-%dT%H:%M:%SZ")
-                + timedelta(hours=9)
-                if task_from_todoist.date != None and len(task_from_todoist.date) > 10
-                else task_from_todoist.date
-            )
+            if task_from_todoist.date != None:
+                if len(task_from_todoist.date) == 20:
+                    task_from_todoist_date = (
+                    datetime.strptime(task_from_todoist.date, "%Y-%m-%dT%H:%M:%SZ")
+                    + timedelta(hours=9)
+                    )
+                elif len(task_from_todoist.date) == 19:
+                    task_from_todoist_date = (
+                    datetime.strptime(task_from_todoist.date, "%Y-%m-%dT%H:%M:%S")
+                    + timedelta(hours=9)
+                    )
+            else:
+                task_from_todoist_date = task_from_todoist.date
+            
 
         # if not at todoist make todoist task
         if not task_from_todoist:
