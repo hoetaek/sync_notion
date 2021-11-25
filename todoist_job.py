@@ -45,12 +45,13 @@ def create_date_next_action_task(page_id, title, label_ids, date):
     }
     # if date:
     #     task_data["due_datetime"] = date
-    if date and len(date) == 10:
-        task_data["due_date"] = date
-    else:
-        task_data["due_datetime"] = datetime.strptime(
-            date, "%Y-%m-%dT%H:%M:%S.%f+09:00"
-        ).isoformat()
+    if date:
+        if len(date) == 10:
+            task_data["due_date"] = date
+        else:
+            task_data["due_datetime"] = datetime.strptime(
+                date, "%Y-%m-%dT%H:%M:%S.%f+09:00"
+            ).isoformat()
 
     result = requests.post(
         "https://api.todoist.com/rest/v1/tasks",
