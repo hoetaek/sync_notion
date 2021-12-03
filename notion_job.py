@@ -112,6 +112,19 @@ def create_errorpage_in_gtd_collect(errormessage):
     return page["id"]
 
 
+def get_gtd_checked_collection_pages():
+    result = notion.databases.query(
+        gtd_database_id,
+        filter={
+            "and": [
+                {"property": "상태", "select": {"equals": "-----수집함-----"}},
+                {"property": "완료", "checkbox": {"equals": True}},
+            ]
+        },
+    )
+    return result["results"]
+
+
 def get_gtd_date_next_action_pages():
     result = notion.databases.query(
         gtd_database_id,
@@ -147,7 +160,7 @@ def reopen_gtd_date_next_action_page(page_id):
     )
 
 
-def update_gtd_date_next_action_pages_compete(page_id):
+def update_gtd_page_complete(page_id):
     notion.pages.update(
         page_id=page_id,
         properties={
@@ -234,4 +247,4 @@ def delete_meta_reminders_page(reminder_page_id):
 if __name__ == "__main__":
     from pprint import pprint
 
-    pprint(get_incubating_pages())
+    pprint(get_gtd_checked_collection_pages())

@@ -39,6 +39,7 @@ def notion2todoist_and_notion_cleanup():
     try:
         sync_date_next_actions2todoist()
         send_tickler2collection()
+        update_checked_collection2done()
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
@@ -50,6 +51,11 @@ def send_tickler2collection():
             title = page["properties"]["Name"]["title"][0]["text"]["content"]
             notion_job.create_gtd_collect_page(title)
 
+def update_checked_collection2done():
+    page_results = notion_job.get_gtd_checked_collection_pages()
+    for page in page_results:
+        page_id = page['id']
+        notion_job.update_gtd_page_complete(page_id)
 
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()
@@ -156,4 +162,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    notion2todoist_and_notion_cleanup()
+    update_checked_collection2done()
