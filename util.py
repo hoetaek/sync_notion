@@ -31,7 +31,7 @@ def handle_webhook_task(item):
             gtd = GTD.from_webhook(item)
             gtd.create()
             task = Task.from_gtd(gtd)
-            task.delete()
+            task.close()
         elif item["event_name"] == "note:added":
             file_url = item["event_data"]["file_attachment"]["file_url"]
             # item_id = item["event_data"]["item_id"]
