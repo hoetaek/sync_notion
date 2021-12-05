@@ -1,14 +1,12 @@
+import traceback
 from datetime import datetime, timedelta
 from typing import List
-import traceback
 
-import gsheet_func
 import notion_job
 import todoist_job
 from constants import inbox_project_id
 from notion_gtd import GTD
 from todoist_task import Task
-
 
 # def update_notion_stocks():
 #     stocks_from_sheet = list(set(gsheet_func.get_sheet_stocks()))
@@ -33,6 +31,14 @@ def handle_webhook_task(item):
         gtd.create()
         task = Task.from_gtd(gtd)
         task.delete()
+    elif item["event_name"] == "note:added":
+        file_url = item["event_data"]["file_attachment"]["file_url"]
+        # item_id = item["event_data"]["item_id"]
+        email_title = item["event_data"]["file_attachment"]["file_name"]
+        content = item["event_data"]["content"]
+        results = notion_job.get_gtd_email_collection_page(email_title)
+        page_id = results[0]["id"]
+        notion_job.update_gtd_email_collection_page(page_id, file_url, content)
 
 
 def notion2todoist_and_notion_cleanup():
@@ -51,11 +57,13 @@ def send_tickler2collection():
             title = page["properties"]["Name"]["title"][0]["text"]["content"]
             notion_job.create_gtd_collect_page(title)
 
+
 def update_checked_collection2done():
     page_results = notion_job.get_gtd_checked_collection_pages()
     for page in page_results:
-        page_id = page['id']
+        page_id = page["id"]
         notion_job.update_gtd_page_complete(page_id)
+
 
 def sync_date_next_actions2todoist():
     page_results = notion_job.get_gtd_date_next_action_pages()

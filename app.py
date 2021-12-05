@@ -3,10 +3,7 @@ from pprint import pprint
 
 from flask import Flask, abort, request
 
-from util import (
-    handle_webhook_task,
-    notion2todoist_and_notion_cleanup,
-)
+from util import handle_webhook_task, notion2todoist_and_notion_cleanup
 
 app = Flask(__name__)
 

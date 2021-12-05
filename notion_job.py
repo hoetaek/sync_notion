@@ -125,6 +125,22 @@ def get_gtd_checked_collection_pages():
     return result["results"]
 
 
+def get_gtd_email_collection_page(email_title: str):
+    import time
+
+    time.sleep(3)
+    result = notion.databases.query(
+        gtd_database_id,
+        filter={
+            "and": [
+                {"property": "상태", "select": {"equals": "-----수집함-----"}},
+                {"property": "이름", "text": {"equals": email_title}},
+            ]
+        },
+    )
+    return result["results"]
+
+
 def get_gtd_date_next_action_pages():
     result = notion.databases.query(
         gtd_database_id,
@@ -171,6 +187,36 @@ def update_gtd_page_complete(page_id):
                 "checkbox": True,
             },
         },
+    )
+
+
+def update_gtd_email_collection_page(page_id, file_url, content):
+
+    notion.blocks.children.append(
+        block_id=page_id,
+        children=[
+            {
+                "object": "block",
+                "type": "embed",
+                "embed": {
+                    "url": file_url,
+                },
+            },
+            {
+                "object": "block",
+                "type": "paragraph",
+                "paragraph": {
+                    "text": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": content,
+                            },
+                        },
+                    ],
+                },
+            },
+        ],
     )
 
 
