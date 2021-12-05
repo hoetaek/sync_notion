@@ -190,19 +190,8 @@ def update_gtd_page_complete(page_id):
     )
 
 
-def update_gtd_email_collection_page(page_id, file_url, content):
-
-    notion.blocks.children.append(
-        block_id=page_id,
-        children=[
-            {
-                "object": "block",
-                "type": "embed",
-                "embed": {
-                    "url": file_url,
-                },
-            },
-            {
+def paragraph_block_format(content):
+    return {
                 "object": "block",
                 "type": "paragraph",
                 "paragraph": {
@@ -215,8 +204,25 @@ def update_gtd_email_collection_page(page_id, file_url, content):
                         },
                     ],
                 },
+            }
+
+def update_gtd_email_collection_page(page_id, file_url, contents):
+    block_children = [
+        {
+                "object": "block",
+                "type": "embed",
+                "embed": {
+                    "url": file_url,
+                },
             },
-        ],
+    ]
+
+    for content in contents.split():
+        block_children.append(paragraph_block_format(content))
+
+    notion.blocks.children.append(
+        block_id=page_id,
+        children=block_children
     )
 
 
