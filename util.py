@@ -20,25 +20,28 @@ from todoist_task import Task
 
 
 def handle_webhook_task(item):
-    if item["event_name"] == "item:completed" and item["event_data"]["description"]:
-        gtd = GTD.from_webhook(item)
-        gtd.complete()
-    elif (
-        item["event_name"] == "item:added"
-        and item["event_data"]["project_id"] == inbox_project_id
-    ):
-        gtd = GTD.from_webhook(item)
-        gtd.create()
-        task = Task.from_gtd(gtd)
-        task.delete()
-    elif item["event_name"] == "note:added":
-        file_url = item["event_data"]["file_attachment"]["file_url"]
-        # item_id = item["event_data"]["item_id"]
-        email_title = item["event_data"]["file_attachment"]["file_name"]
-        content = item["event_data"]["content"]
-        results = notion_job.get_gtd_email_collection_page(email_title)
-        page_id = results[0]["id"]
-        notion_job.update_gtd_email_collection_page(page_id, file_url, content)
+    try:
+        if item["event_name"] == "item:completed" and item["event_data"]["description"]:
+            gtd = GTD.from_webhook(item)
+            gtd.complete()
+        elif (
+            item["event_name"] == "item:added"
+            and item["event_data"]["project_id"] == inbox_project_id
+        ):
+            gtd = GTD.from_webhook(item)
+            gtd.create()
+            task = Task.from_gtd(gtd)
+            task.delete()
+        elif item["event_name"] == "note:added":
+            file_url = item["event_data"]["file_attachment"]["file_url"]
+            # item_id = item["event_data"]["item_id"]
+            email_title = item["event_data"]["file_attachment"]["file_name"]
+            content = item["event_data"]["content"]
+            results = notion_job.get_gtd_email_collection_page(email_title)
+            page_id = results[0]["id"]
+            notion_job.update_gtd_email_collection_page(page_id, file_url, content)
+    except Exception:
+        notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
 
 def notion2todoist_and_notion_cleanup():
