@@ -36,6 +36,7 @@ def handle_webhook_task(item):
             file_url = item["event_data"]["file_attachment"]["file_url"]
             # item_id = item["event_data"]["item_id"]
             email_title = item["event_data"]["file_attachment"]["file_name"]
+            notion_job.create_errorpage_in_gtd_collect(email_title)
             content = item["event_data"]["content"]
             results = notion_job.get_gtd_email_collection_page(email_title)
             page_id = results[0]["id"]
