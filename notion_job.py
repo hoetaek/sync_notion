@@ -14,6 +14,16 @@ from constants import (
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
 
+
+################ general ################
+def get_block_children(blockId):
+    result = notion.blocks.children.list({
+    block_id=blockId,
+    page_size=50,
+  })
+    return result["results"]
+    
+
 ################ stock ################
 def get_pages_from_stock_db():
     pages = notion.databases.query(stock_database_id)
