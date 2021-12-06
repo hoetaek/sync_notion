@@ -126,9 +126,6 @@ def get_gtd_checked_collection_pages():
 
 
 def get_gtd_email_collection_page(email_title: str):
-    import time
-
-    time.sleep(10)
     result = notion.databases.query(
         gtd_database_id,
         filter={
