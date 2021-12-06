@@ -1,5 +1,6 @@
 import traceback
 from datetime import datetime, timedelta
+import time
 from typing import List
 
 import notion_job
@@ -38,6 +39,7 @@ def handle_webhook_task(item):
             email_title = item["event_data"]["file_attachment"]["file_name"]
             # notion_job.create_errorpage_in_gtd_collect(email_title)
             content = item["event_data"]["content"]
+            time.sleep(10)
             results = notion_job.get_gtd_email_collection_page(email_title)
             page_id = results[0]["id"]
             notion_job.update_gtd_email_collection_page(page_id, file_url, content)
