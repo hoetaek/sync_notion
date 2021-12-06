@@ -17,10 +17,10 @@ notion = Client(auth=token)
 
 ################ general ################
 def get_block_children(blockId):
-    result = notion.blocks.children.list({
+    result = notion.blocks.children.list(
     block_id=blockId,
     page_size=50,
-  })
+  )
     return result["results"]
     
 
