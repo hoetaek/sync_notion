@@ -1,6 +1,6 @@
+import time
 import traceback
 from datetime import datetime, timedelta
-import time
 from typing import List
 
 import notion_job
@@ -32,7 +32,7 @@ def handle_webhook_task(item):
             gtd = GTD.from_webhook(item)
             gtd.create()
             task = Task.from_gtd(gtd)
-            task.close()
+            task.delete()
         elif item["event_name"] == "note:added":
             file_url = item["event_data"]["file_attachment"]["file_url"]
             # item_id = item["event_data"]["item_id"]

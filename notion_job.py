@@ -18,11 +18,11 @@ notion = Client(auth=token)
 ################ general ################
 def get_block_children(blockId):
     result = notion.blocks.children.list(
-    block_id=blockId,
-    page_size=50,
-  )
+        block_id=blockId,
+        page_size=50,
+    )
     return result["results"]
-    
+
 
 ################ stock ################
 def get_pages_from_stock_db():
@@ -199,38 +199,36 @@ def update_gtd_page_complete(page_id):
 
 def paragraph_block_format(content):
     return {
-                "object": "block",
-                "type": "paragraph",
-                "paragraph": {
-                    "text": [
-                        {
-                            "type": "text",
-                            "text": {
-                                "content": content,
-                            },
-                        },
-                    ],
+        "object": "block",
+        "type": "paragraph",
+        "paragraph": {
+            "text": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": content,
+                    },
                 },
-            }
+            ],
+        },
+    }
+
 
 def update_gtd_email_collection_page(page_id, file_url, contents):
     block_children = [
         {
-                "object": "block",
-                "type": "embed",
-                "embed": {
-                    "url": file_url,
-                },
+            "object": "block",
+            "type": "embed",
+            "embed": {
+                "url": file_url,
             },
+        },
     ]
 
     for content in list(filter(lambda x: x != "", contents.split("\n"))):
         block_children.append(paragraph_block_format(content))
 
-    notion.blocks.children.append(
-        block_id=page_id,
-        children=block_children
-    )
+    notion.blocks.children.append(block_id=page_id, children=block_children)
 
 
 ################ Incubating ################
