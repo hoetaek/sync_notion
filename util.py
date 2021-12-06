@@ -42,7 +42,8 @@ def handle_webhook_task(item):
             time.sleep(10)
             results = notion_job.get_gtd_email_collection_page(email_title)
             page_id = results[0]["id"]
-            notion_job.update_gtd_email_collection_page(page_id, file_url, content)
+            if not notion_job.get_block_children(page_id):
+                notion_job.update_gtd_email_collection_page(page_id, file_url, content)
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
