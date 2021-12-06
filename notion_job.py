@@ -217,7 +217,7 @@ def update_gtd_email_collection_page(page_id, file_url, contents):
             },
     ]
 
-    for content in contents.split("\n"):
+    for content in list(filter(lambda x: x != "", contents.split("\n"))):
         block_children.append(paragraph_block_format(content))
 
     notion.blocks.children.append(
