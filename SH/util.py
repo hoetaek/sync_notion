@@ -12,7 +12,7 @@ def notion_cleanup_SH():
 
 
 def update_checked_collection2done():
-    page_results = sh_notion_job.get_sh_gtd_checked_collection_pages()
+    page_results = sh_notion_job.get_sh_gtd_checked_pages()
     print(page_results)
     for page in page_results:
         page_id = page["id"]

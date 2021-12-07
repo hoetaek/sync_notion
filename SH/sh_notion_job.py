@@ -10,12 +10,17 @@ notion = Client(auth=token)
 
 
 ################ gtd ################
-def get_sh_gtd_checked_collection_pages():
+def get_sh_gtd_checked_pages():
     result = notion.databases.query(
         sh_gtd_database_id,
         filter={
             "and": [
-                {"property": "상태", "select": {"equals": "----수집함----"}},
+                {"or": [
+                    {"property": "상태", "select": {"equals": "----수집함----"}},
+                    {"property": "상태", "select": {"equals": "다음 행동"}},
+                    {"property": "상태", "select": {"equals": "일정"}},
+                ]
+                },
                 {"property": "완료", "checkbox": {"equals": True}},
             ]
         },
@@ -41,4 +46,4 @@ if __name__ == "__main__":
     from pprint import pprint
 
     # result = notion.databases.retrieve(database_id= sh_gtd_database_id)
-    pprint(get_sh_gtd_checked_collection_pages())
+    pprint(get_sh_gtd_checked_pages())
