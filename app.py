@@ -4,6 +4,7 @@ from pprint import pprint
 from flask import Flask, abort, request
 
 from util import handle_webhook_task, notion2todoist_and_notion_cleanup
+from SH.util import notion_cleanup_SH
 
 app = Flask(__name__)
 
@@ -32,6 +33,15 @@ def todoist():
 def notion2todoist():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=notion2todoist_and_notion_cleanup, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/sh-notion-clean-gtd")
+def notion_for_SH():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_SH, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"
