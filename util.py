@@ -60,8 +60,8 @@ def notion2todoist_and_notion_cleanup():
 def send_tickler2collection():
     page_results = notion_job.get_incubating_pages()
     for page in page_results:
-        if page["properties"]["Name"]["title"]:
-            title = page["properties"]["Name"]["title"][0]["text"]["content"]
+        if page["properties"]["이름"]["title"]:
+            title = page["properties"]["이름"]["title"][0]["text"]["content"]
             notion_job.create_gtd_collect_page(title)
 
 
@@ -177,4 +177,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    update_checked_collection2done()
+    print(send_tickler2collection())
