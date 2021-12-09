@@ -8,12 +8,15 @@ from constants import (
     gtd_database_id,
     incubating_database_id,
     meta_reminders_database_id,
+    reports_database_id,
     stock_database_id,
 )
 
 token = environ["NOTION_TOKEN"]
 notion = Client(auth=token)
 
+fin_token = environ["NOTION_REPORT_TOKEN"]
+fin_notion = Client(auth=fin_token)
 
 ################ general ################
 def get_block_children(blockId):
@@ -301,7 +304,54 @@ def delete_meta_reminders_page(reminder_page_id):
     )
 
 
+################ reports ################
+def get_db_report_pages():
+    results = fin_notion.databases.query(database_id=reports_database_id)
+    return results["results"]
+
+
+def create_report_page(
+    title,
+    catalog,
+    date,
+    link,
+    brokerage,
+    file_url,
+):
+    page = fin_notion.pages.create(
+        parent={
+            "database_id": reports_database_id,
+        },
+        properties={
+            "제목": {
+                "title": [
+                    {
+                        "text": {
+                            "content": title,
+                        },
+                    }
+                ],
+            },
+            "분류": {
+                "select": {"name": catalog},
+            },
+            "작성일": {"date": {"start": date}},
+            "증권사": {"select": {"name": brokerage}},
+            "파일": {"url": file_url},
+            "링크": {"url": link},
+        },
+    )
+    return page["id"]
+
+
+def update_fin_report_content(page_id, contents, file_url):
+    block_children = []
+    for content in list(filter(lambda x: x != "", contents.split("\n"))):
+        block_children.append(paragraph_block_format(content))
+    fin_notion.blocks.children.append(block_id=page_id, children=block_children)
+
+
 if __name__ == "__main__":
     from pprint import pprint
 
-    pprint(get_gtd_checked_collection_pages())
+    pprint(get_reports())

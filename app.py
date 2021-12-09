@@ -3,8 +3,12 @@ from pprint import pprint
 
 from flask import Flask, abort, request
 
-from util import handle_webhook_task, notion2todoist_and_notion_cleanup
 from SH.util import notion_cleanup_SH
+from util import (
+    handle_webhook_task,
+    notion2todoist_and_notion_cleanup,
+    work_on_fin_reports,
+)
 
 app = Flask(__name__)
 
@@ -33,6 +37,15 @@ def todoist():
 def notion2todoist():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=notion2todoist_and_notion_cleanup, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/reports/update")
+def update_fin_reports():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=work_on_fin_reports, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

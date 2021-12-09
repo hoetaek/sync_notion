@@ -7,6 +7,7 @@ import notion_job
 import todoist_job
 from constants import inbox_project_id
 from notion_gtd import GTD
+from report_job import crawl_fin_reports
 from todoist_task import Task
 
 # def update_notion_stocks():
@@ -55,6 +56,36 @@ def notion2todoist_and_notion_cleanup():
         update_checked_collection2done()
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
+
+
+def work_on_fin_reports():
+    reports = crawl_fin_reports()
+    db_urls = get_db_reports()
+
+    for report in reversed(reports):
+        link = report["link"]
+        if link not in db_urls:
+            page_id = notion_job.create_report_page(
+                report["title"],
+                report["catalog"],
+                report["date"],
+                report["link"],
+                report["brokerage"],
+                report["file_url"],
+            )
+            notion_job.update_fin_report_content(
+                page_id, report["content"], report["file_url"]
+            )
+
+
+def get_db_reports():
+    result = notion_job.get_db_report_pages()
+    db_urls = [
+        report["properties"]["링크"]["url"]
+        for report in result
+        if report["properties"]["링크"]["url"]
+    ]
+    return db_urls
 
 
 def send_tickler2collection():
@@ -177,4 +208,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    print(send_tickler2collection())
+    work_on_fin_reports()

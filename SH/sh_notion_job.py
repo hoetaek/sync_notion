@@ -15,11 +15,12 @@ def get_sh_gtd_checked_pages():
         sh_gtd_database_id,
         filter={
             "and": [
-                {"or": [
-                    {"property": "상태", "select": {"equals": "----수집함----"}},
-                    {"property": "상태", "select": {"equals": "다음 행동"}},
-                    {"property": "상태", "select": {"equals": "일정"}},
-                ]
+                {
+                    "or": [
+                        {"property": "상태", "select": {"equals": "----수집함----"}},
+                        {"property": "상태", "select": {"equals": "다음 행동"}},
+                        {"property": "상태", "select": {"equals": "일정"}},
+                    ]
                 },
                 {"property": "완료", "checkbox": {"equals": True}},
             ]
