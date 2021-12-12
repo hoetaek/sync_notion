@@ -24,6 +24,7 @@ def crawl_fin_reports():
 
                 res = requests.get(report["link"])
                 html = res.text
+                soup = BeautifulSoup(html, "html.parser")
                 content = "\n".join([i.text for i in soup.select("div > p")])
                 report["content"] = content
 
