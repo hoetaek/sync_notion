@@ -3,7 +3,11 @@ from pprint import pprint
 
 from flask import Flask, abort, request
 
-from SH.util import notion_cleanup_SH
+from SH.util import (
+    notion_cleanup_HDS,
+    notion_cleanup_SH_PERSONAL,
+    notion_cleanup_SH_teacher,
+)
 from util import (
     handle_webhook_task,
     notion2todoist_and_notion_cleanup,
@@ -54,7 +58,25 @@ def update_fin_reports():
 @app.route("/sh-notion-clean-gtd")
 def notion_for_SH():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
-        target=notion_cleanup_SH, daemon=True
+        target=notion_cleanup_SH_teacher, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/sh-personal-clean-gtd")
+def notion_for_SH_PERSONAL():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_SH_PERSONAL, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/hds-notion-clean-gtd")
+def notion_for_HDS():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_HDS, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

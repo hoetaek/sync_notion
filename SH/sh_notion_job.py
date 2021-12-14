@@ -1,18 +1,10 @@
 from datetime import datetime
-from os import environ
-
-from notion_client import Client
-
-from SH.constants import sh_gtd_database_id
-
-token = environ["NOTION_TOKEN_SH"]
-notion = Client(auth=token)
 
 
 ################ gtd ################
-def get_sh_gtd_checked_pages():
+def get_gtd_checked_pages(notion, database_id, checkbox_name="완료"):
     result = notion.databases.query(
-        sh_gtd_database_id,
+        database_id,
         filter={
             "and": [
                 {
@@ -22,21 +14,21 @@ def get_sh_gtd_checked_pages():
                         {"property": "상태", "select": {"equals": "일정"}},
                     ]
                 },
-                {"property": "완료", "checkbox": {"equals": True}},
+                {"property": checkbox_name, "checkbox": {"equals": True}},
             ]
         },
     )
     return result["results"]
 
 
-def update_gtd_page_complete(page_id):
+def update_gtd_page_complete(notion, page_id, checkbox_name="완료", complete_name="Done"):
     notion.pages.update(
         page_id=page_id,
         properties={
             "상태": {
-                "select": {"color": "brown", "name": "Done"},
+                "select": {"color": "brown", "name": complete_name},
             },
-            "완료": {
+            checkbox_name: {
                 "checkbox": True,
             },
         },
@@ -46,5 +38,5 @@ def update_gtd_page_complete(page_id):
 if __name__ == "__main__":
     from pprint import pprint
 
-    # result = notion.databases.retrieve(database_id= sh_gtd_database_id)
-    pprint(get_sh_gtd_checked_pages())
+    # result = notion.databases.retrieve(database_id= sh_teacher_gtd_database_id)
+    pprint(get_gtd_checked_pages())
