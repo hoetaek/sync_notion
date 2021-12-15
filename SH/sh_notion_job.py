@@ -2,33 +2,29 @@ from datetime import datetime
 
 
 ################ gtd ################
-def get_gtd_checked_pages(notion, database_id, checkbox_name="완료"):
+def get_gtd_checked_pages(notion, database_id):
+    filters = {
+        "and": [
+            {"property": "상태", "select": {"does_not_equal": "완료"}},
+            {"property": "완료", "checkbox": {"equals": True}},
+        ]
+    }
+
     result = notion.databases.query(
         database_id,
-        filter={
-            "and": [
-                {
-                    "or": [
-                        {"property": "상태", "select": {"equals": "----수집함----"}},
-                        {"property": "상태", "select": {"equals": "다음 행동"}},
-                        {"property": "상태", "select": {"equals": "일정"}},
-                    ]
-                },
-                {"property": checkbox_name, "checkbox": {"equals": True}},
-            ]
-        },
+        filter=filters,
     )
     return result["results"]
 
 
-def update_gtd_page_complete(notion, page_id, checkbox_name="완료", complete_name="Done"):
+def update_gtd_page_complete(notion, page_id):
     notion.pages.update(
         page_id=page_id,
         properties={
             "상태": {
-                "select": {"color": "brown", "name": complete_name},
+                "select": {"color": "brown", "name": "완료"},
             },
-            checkbox_name: {
+            "완료": {
                 "checkbox": True,
             },
         },

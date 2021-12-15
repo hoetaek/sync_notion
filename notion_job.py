@@ -129,8 +129,8 @@ def get_gtd_checked_collection_pages():
     result = notion.databases.query(
         gtd_database_id,
         filter={
-            "and": [
-                {"property": "상태", "select": {"equals": "-----수집함-----"}},
+                "and": [
+                {"property": "상태", "select": {"does_not_equal": "완료"}},
                 {"property": "완료", "checkbox": {"equals": True}},
             ]
         },

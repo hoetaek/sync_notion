@@ -78,10 +78,10 @@ class Task(Action):
             Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder
         ]
         update_date_next_action_task(self.task_id, self.title, label_ids, self.date)
-        if self.checked == True:
-            print("unchecked")
-            reopen_task(self.task_id)
-            reopen_gtd_date_next_action_page(self.page_id)
+        # if self.checked == True:
+        #     print("unchecked")
+        #     reopen_task(self.task_id)
+        #     reopen_gtd_date_next_action_page(self.page_id)
 
     def close(self):
         close_task(self.task_id)

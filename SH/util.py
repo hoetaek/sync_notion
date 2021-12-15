@@ -16,7 +16,8 @@ def notion_cleanup_SH_teacher():
     notion = Client(auth=token)
 
     page_results = sh_notion_job.get_gtd_checked_pages(
-        notion, sh_teacher_gtd_database_id
+        notion,
+        sh_teacher_gtd_database_id
     )
     print(page_results)
     for page in page_results:
@@ -29,13 +30,13 @@ def notion_cleanup_HDS():
     notion = Client(auth=token)
 
     page_results = sh_notion_job.get_gtd_checked_pages(
-        notion, hds_gtd_database_id, checkbox_name="프로젝트 작업 완료"
+        notion, hds_gtd_database_id
     )
     print(page_results)
     for page in page_results:
         page_id = page["id"]
         sh_notion_job.update_gtd_page_complete(
-            notion, page_id, checkbox_name="프로젝트 작업 완료", complete_name="완료"
+            notion, page_id
         )
 
 
@@ -43,7 +44,10 @@ def notion_cleanup_SH_PERSONAL():
     token = environ["NOTION_TOKEN_SH_PERSONAL"]
     notion = Client(auth=token)
 
-    page_results = sh_notion_job.get_gtd_checked_pages(notion, personal_gtd_database_id)
+    page_results = sh_notion_job.get_gtd_checked_pages(
+        notion,
+        personal_gtd_database_id
+    )
     print(page_results)
     for page in page_results:
         page_id = page["id"]
