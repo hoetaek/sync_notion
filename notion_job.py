@@ -191,7 +191,7 @@ def update_gtd_page_complete(page_id):
         page_id=page_id,
         properties={
             "상태": {
-                "select": {"color": "brown", "name": "Done"},
+                "select": {"color": "brown", "name": "완료"},
             },
             "완료": {
                 "checkbox": True,
