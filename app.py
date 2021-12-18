@@ -3,7 +3,7 @@ from pprint import pprint
 
 from flask import Flask, abort, request
 
-from SH.util import (
+from others.util import (
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
