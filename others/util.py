@@ -56,7 +56,7 @@ def notion_cleanup_coding_kkanbu():
     page_results = others_notion_job.get_gtd_checked_pages(
         notion, kkanbu_gtd_database_id
     )
-    print(len(page_results))
+    print(page_results)
     for page in page_results:
         page_id = page["id"]
         others_notion_job.update_gtd_page_complete(notion, page_id)
