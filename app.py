@@ -4,6 +4,7 @@ from pprint import pprint
 from flask import Flask, abort, request
 
 from others.util import (
+    notion_cleanup_coding_kkanbu,
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
@@ -77,6 +78,15 @@ def notion_for_SH_PERSONAL():
 def notion_for_HDS():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=notion_cleanup_HDS, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/kkanbu-notion-clean-gtd")
+def notion_for_kkanbu():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_coding_kkanbu, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

@@ -1,3 +1,4 @@
 sh_teacher_gtd_database_id = "b90e1fd964c849c39884376f6e8acd40"
 hds_gtd_database_id = "230bdca30c6246e7b3e9069cd315a0fc"
 personal_gtd_database_id = "002f20315bce4f1e8f527d22c3e0f928"
+kkanbu_gtd_database_id = "2b87ffc072dc4bdc9dd4ecb80b4ac6fa"
