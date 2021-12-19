@@ -8,6 +8,7 @@ from others.util import (
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
+    notion_cleanup_edutech,
 )
 from util import (
     handle_webhook_task,
@@ -87,6 +88,15 @@ def notion_for_HDS():
 def notion_for_kkanbu():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=notion_cleanup_coding_kkanbu, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/edutech-notion-clean-gtd")
+def notion_for_edutech():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_edutech, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

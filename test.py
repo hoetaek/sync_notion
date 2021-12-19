@@ -8,6 +8,7 @@ if __name__ == "__main__":
         "/sh-personal-clean-gtd",
         "/hds-notion-clean-gtd",
         "/kkanbu-notion-clean-gtd",
+        "/edutech-notion-clean-gtd",
     ]
     for url in urls:
         res = requests.get("http://127.0.0.1:5000" + url)
