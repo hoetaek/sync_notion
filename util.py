@@ -1,6 +1,6 @@
 import time
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 
 import notion_job
@@ -90,11 +90,10 @@ def get_db_reports():
 
 
 def send_tickler2collection():
-    page_results = notion_job.get_incubating_pages()
+    page_results = notion_job.get_tickler_pages()
     for page in page_results:
-        if page["properties"]["이름"]["title"]:
-            title = page["properties"]["이름"]["title"][0]["text"]["content"]
-            notion_job.create_gtd_collect_page(title)
+        page_id = page["id"]
+        notion_job.update_gtd_page2collection(page_id)
 
 
 def update_checked_collection2done():
@@ -223,4 +222,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    sync_date_next_actions2todoist()
+    send_tickler2collection()
