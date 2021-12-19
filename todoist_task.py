@@ -24,11 +24,10 @@ class Task(Action):
             v["label_id"]: {"color": v["color_id"], "name": k}
             for k, v in Task.meta_reminders_dict.items()
         }
-        # TODO how do you get color id?
         reminder = [
             {
                 "name": notion_labels_by_id.get(label_id).get("name"),
-                "color_id": notion_labels_by_id.get(label_id).get("color_id"),
+                "color_id": notion_labels_by_id.get(label_id).get("color"),
             }
             for label_id in todoist_obj["label_ids"]
         ]

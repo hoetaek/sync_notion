@@ -79,7 +79,7 @@ def update_date_next_action_task(task_id, title, label_ids, date):
             date, "%Y-%m-%dT%H:%M:%S.%f+09:00"
         ).isoformat()
 
-    r = requests.post(
+    requests.post(
         "https://api.todoist.com/rest/v1/tasks/" + str(task_id),
         data=json.dumps(task_data),
         headers={
@@ -88,7 +88,6 @@ def update_date_next_action_task(task_id, title, label_ids, date):
             "Authorization": "Bearer " + token,
         },
     )
-    print(r)
 
 
 def delete_task(task_id):

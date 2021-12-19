@@ -104,10 +104,12 @@ def update_checked_collection2done():
 
 
 def sync_date_next_actions2todoist():
+    print("getting gtd date next action pages")
     page_results = notion_job.get_gtd_date_next_action_pages()
     gtd_date_next_action_pages = [
         GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]
     ]
+    print("getting todoist date next action tasks")
     date_next_action_tasks = [
         Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
     ]
@@ -131,11 +133,13 @@ def sync_date_next_actions2todoist():
                 if len(task_from_todoist.date) == 20:
                     task_from_todoist_date = datetime.strptime(
                         task_from_todoist.date, "%Y-%m-%dT%H:%M:%SZ"
-                    ) + timedelta(hours=9)
+                    )
                 elif len(task_from_todoist.date) == 19:
                     task_from_todoist_date = datetime.strptime(
                         task_from_todoist.date, "%Y-%m-%dT%H:%M:%S"
-                    ) + timedelta(hours=9)
+                    )
+                else:
+                    task_from_todoist_date = task_from_todoist.date
             else:
                 task_from_todoist_date = task_from_todoist.date
 
@@ -148,10 +152,18 @@ def sync_date_next_actions2todoist():
             page.update()
         # if at todoist and detail changes update the details
         elif (
-            task.title != task_from_todoist.title or task_date != task_from_todoist_date
+            task.title != task_from_todoist.title
+            or task_date != task_from_todoist_date
+            or task.reminder != task_from_todoist.reminder
         ):
-            print("updating", task)
+            print(
+                task.title != task_from_todoist.title,
+                task_date != task_from_todoist_date,
+                task.reminder != task_from_todoist.reminder,
+            )
             print(task_date, task_from_todoist_date)
+            print(task.reminder, task_from_todoist.reminder)
+            print("updating", task)
             print("*" * 20)
             task.update()
         else:
@@ -186,7 +198,7 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
     for reminder in [
         dict(t) for t in {tuple(d.items()) for d in reminder_to_make_in_todoist}
     ]:
-
+        print(reminder)
         label_id = todoist_job.create_label(reminder["name"], reminder["color_id"])[
             "id"
         ]
@@ -208,4 +220,4 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    work_on_fin_reports()
+    sync_date_next_actions2todoist()

@@ -2,7 +2,7 @@ import requests
 
 if __name__ == "__main__":
     urls = [
-        # "/todoist/next-actions",
+        "/todoist/next-actions",
         "/reports/update",
         "/sh-notion-clean-gtd",
         "/sh-personal-clean-gtd",
