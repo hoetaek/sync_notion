@@ -37,7 +37,17 @@ def notion_cleanup_SH_PERSONAL():
 
 def notion_cleanup_HDS():
     token = environ["NOTION_TOKEN_HDS"]
-    notion_cleanup(token, hds_gtd_database_id)
+    notion = Client(auth=token)
+
+    page_results = others_notion_job.get_gtd_checked_pages(
+        notion, hds_gtd_database_id, add_filters={
+            "property": "상태", "select": {"does_not_equal": "공식 일정"}},
+    )
+
+    print(page_results)
+    for page in page_results:
+        page_id = page["id"]
+        others_notion_job.update_gtd_page_complete(notion, page_id)
 
 
 def notion_cleanup_coding_kkanbu():

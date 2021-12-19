@@ -2,13 +2,16 @@ from datetime import datetime
 
 
 ################ gtd ################
-def get_gtd_checked_pages(notion, database_id):
+def get_gtd_checked_pages(notion, database_id, add_filters={}):
     filters = {
         "and": [
             {"property": "상태", "select": {"does_not_equal": "완료"}},
             {"property": "완료", "checkbox": {"equals": True}},
         ]
     }
+
+    if add_filters:
+        filters["and"].append(add_filters)
 
     result = notion.databases.query(
         database_id,
