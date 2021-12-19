@@ -16,9 +16,7 @@ from others.constants import (
 def notion_cleanup(token, database_id):
     notion = Client(auth=token)
 
-    page_results = others_notion_job.get_gtd_checked_pages(
-        notion, database_id
-    )
+    page_results = others_notion_job.get_gtd_checked_pages(notion, database_id)
     print(page_results)
     for page in page_results:
         page_id = page["id"]
@@ -40,8 +38,9 @@ def notion_cleanup_HDS():
     notion = Client(auth=token)
 
     page_results = others_notion_job.get_gtd_checked_pages(
-        notion, hds_gtd_database_id, add_filters={
-            "property": "상태", "select": {"does_not_equal": "공식 일정"}},
+        notion,
+        hds_gtd_database_id,
+        add_filters={"property": "상태", "select": {"does_not_equal": "공식 일정"}},
     )
 
     print(page_results)

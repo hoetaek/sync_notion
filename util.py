@@ -53,9 +53,9 @@ def handle_webhook_task(item):
 
 def notion2todoist_and_notion_cleanup():
     try:
-        sync_date_next_actions2todoist()
         send_tickler2collection()
         update_checked_collection2done()
+        sync_date_next_actions2todoist()
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
