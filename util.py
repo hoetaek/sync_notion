@@ -34,7 +34,9 @@ def handle_webhook_task(item):
             gtd.create()
             task = Task.from_gtd(gtd)
             task.delete()
-        elif item["event_name"] == "note:added" and item["event_data"]["file_attachment"]:
+        elif (
+            item["event_name"] == "note:added" and item["event_data"]["file_attachment"]
+        ):
             file_url = item["event_data"]["file_attachment"]["file_url"]
             # item_id = item["event_data"]["item_id"]
             email_title = item["event_data"]["file_attachment"]["file_name"]
@@ -44,8 +46,7 @@ def handle_webhook_task(item):
             results = notion_job.get_gtd_email_collection_page(email_title)
             page_id = results[0]["id"]
             if not notion_job.get_block_children(page_id):
-                notion_job.update_gtd_email_collection_page(
-                    page_id, file_url, content)
+                notion_job.update_gtd_email_collection_page(page_id, file_url, content)
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
@@ -114,8 +115,7 @@ def sync_date_next_actions2todoist():
         Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
     ]
     print("closing todoist which is not in gtd")
-    close_todoist_not_in_gtd(date_next_action_tasks,
-                             gtd_date_next_action_pages)
+    close_todoist_not_in_gtd(date_next_action_tasks, gtd_date_next_action_pages)
     print("syncing todoist labels with gtd reminders")
     sync_labels2meta_reminders(gtd_date_next_action_pages)
 
@@ -128,8 +128,7 @@ def sync_date_next_actions2todoist():
             if task.date != None and len(task.date) > 10
             else task.date
         )
-        task_from_todoist = next(
-            (x for x in date_next_action_tasks if x == task), None)
+        task_from_todoist = next((x for x in date_next_action_tasks if x == task), None)
         if task_from_todoist:
             if task_from_todoist.date != None:
                 if len(task_from_todoist.date) == 20:
@@ -156,7 +155,11 @@ def sync_date_next_actions2todoist():
         elif (
             task.title != task_from_todoist.title
             or task_date != task_from_todoist_date
-            or task.reminder != task_from_todoist.reminder
+            or [
+                reminder
+                for reminder in task.reminder
+                if reminder not in task_from_todoist.reminder
+            ]
         ):
             print(
                 task.title != task_from_todoist.title,

@@ -5,10 +5,10 @@ from flask import Flask, abort, request
 
 from others.util import (
     notion_cleanup_coding_kkanbu,
+    notion_cleanup_edutech,
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
-    notion_cleanup_edutech,
 )
 from util import (
     handle_webhook_task,

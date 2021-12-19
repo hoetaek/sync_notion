@@ -294,8 +294,7 @@ def get_meta_reminders_dict():
     for page in pages["results"]:
         if page["properties"]["실행환기"]["title"]:
             select_value = page["properties"]["color"].get("select", None)
-            color_id = color_dict[select_value["name"]
-                                  ] if select_value else None
+            color_id = color_dict[select_value["name"]] if select_value else None
             reminders_dict[
                 page["properties"]["실행환기"]["title"][0]["text"]["content"]
             ] = {
@@ -358,8 +357,7 @@ def update_fin_report_content(page_id, contents, file_url):
     block_children = []
     for content in list(filter(lambda x: x != "", contents.split("\n"))):
         block_children.append(paragraph_block_format(content))
-    fin_notion.blocks.children.append(
-        block_id=page_id, children=block_children)
+    fin_notion.blocks.children.append(block_id=page_id, children=block_children)
 
 
 if __name__ == "__main__":

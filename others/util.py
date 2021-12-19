@@ -5,11 +5,11 @@ from notion_client import Client
 
 import others.others_notion_job as others_notion_job
 from others.constants import (
+    edutech_gtd_database_id,
     hds_gtd_database_id,
     kkanbu_gtd_database_id,
     personal_gtd_database_id,
     sh_teacher_gtd_database_id,
-    edutech_gtd_database_id,
 )
 
 
@@ -43,8 +43,7 @@ def notion_cleanup_HDS():
     token = environ["NOTION_TOKEN_HDS"]
     notion = Client(auth=token)
 
-    page_results = others_notion_job.get_gtd_checked_pages(
-        notion, hds_gtd_database_id)
+    page_results = others_notion_job.get_gtd_checked_pages(notion, hds_gtd_database_id)
     print(page_results)
     for page in page_results:
         page_id = page["id"]
