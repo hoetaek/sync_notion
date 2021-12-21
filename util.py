@@ -44,15 +44,11 @@ def handle_webhook_task(item):
             content = item["event_data"]["content"]
             time.sleep(10)
             results = notion_job.get_gtd_email_collection_page(email_title)
-            tries = 0
+            
             page_id = None
-            while tries < 5:
-                if results:
-                    page_id = results[0]["id"]
-                    break
-                else:
-                    time.sleep(5)
-                    tries += 1
+            if results:
+                page_id = results[0]["id"]
+
             if page_id and not notion_job.get_block_children(page_id):
                 notion_job.update_gtd_email_collection_page(
                     page_id, file_url, content)
