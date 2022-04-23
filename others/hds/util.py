@@ -7,6 +7,3 @@ def update_gspread_indi_nums_HDS():
     view_nums, heart_nums = work(urls)
     write_view_heart_num(view_nums, input_type="view")
     write_view_heart_num(heart_nums, input_type="heart")
-
-
-update_gspread_indi_nums_HDS()
