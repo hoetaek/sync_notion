@@ -9,6 +9,7 @@ from others.util import (
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
+    update_hds_indi_num,
 )
 from util import (
     handle_webhook_task,
@@ -79,6 +80,15 @@ def notion_for_SH_PERSONAL():
 def notion_for_HDS():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=notion_cleanup_HDS, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/hds-gspread-update-num")
+def gspread_for_HDS():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=update_hds_indi_num, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

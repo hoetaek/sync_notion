@@ -44,14 +44,13 @@ def handle_webhook_task(item):
             content = item["event_data"]["content"]
             time.sleep(10)
             results = notion_job.get_gtd_email_collection_page(email_title)
-            
+
             page_id = None
             if results:
                 page_id = results[0]["id"]
 
             if page_id and not notion_job.get_block_children(page_id):
-                notion_job.update_gtd_email_collection_page(
-                    page_id, file_url, content)
+                notion_job.update_gtd_email_collection_page(page_id, file_url, content)
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
@@ -125,8 +124,9 @@ def sync_date_next_actions2todoist():
         Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
     ]
     print("closing todoist which is not in gtd")
-    close_todoist_not_in_gtd(date_next_action_tasks,
-                             gtd_date_next_action_pages + gtd_collection_pages)
+    close_todoist_not_in_gtd(
+        date_next_action_tasks, gtd_date_next_action_pages + gtd_collection_pages
+    )
     print("syncing todoist labels with gtd reminders")
     sync_labels2meta_reminders(gtd_date_next_action_pages)
 
@@ -139,8 +139,7 @@ def sync_date_next_actions2todoist():
             if task.date != None and len(task.date) > 10
             else task.date
         )
-        task_from_todoist = next(
-            (x for x in date_next_action_tasks if x == task), None)
+        task_from_todoist = next((x for x in date_next_action_tasks if x == task), None)
         if task_from_todoist:
             if task_from_todoist.date != None:
                 if len(task_from_todoist.date) == 20:

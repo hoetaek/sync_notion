@@ -1,11 +1,12 @@
 from os import environ
 
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
 
 view_nums = []
 heart_nums = []
+
 
 def login(driver):
     indi_username = environ["INDI_USERNAME"]
@@ -20,7 +21,7 @@ def get_view_heart_num(driver, url):
     driver.get(url)
 
     html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
 
     view_num = int(soup.select("#post_tools > div:nth-child(2) > span")[0].text)
     heart_num = int(soup.select("#post_tools > div.flex.items-center.-mx-2")[0].text)

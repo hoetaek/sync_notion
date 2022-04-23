@@ -11,6 +11,7 @@ from others.constants import (
     personal_gtd_database_id,
     sh_teacher_gtd_database_id,
 )
+from others.hds.util import update_gspread_indi_nums_HDS
 
 
 def notion_cleanup(token, database_id):
@@ -47,6 +48,10 @@ def notion_cleanup_HDS():
     for page in page_results:
         page_id = page["id"]
         others_notion_job.update_gtd_page_complete(notion, page_id)
+
+
+def update_hds_indi_num():
+    update_gspread_indi_nums_HDS()
 
 
 def notion_cleanup_coding_kkanbu():
