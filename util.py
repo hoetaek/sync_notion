@@ -115,13 +115,18 @@ def sync_date_next_actions2todoist():
     gtd_date_next_action_pages = [
         GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]
     ]
+    print("getting gtd unchecked collection pages")
+    page_results = notion_job.get_gtd_unchecked_collection_pages()
+    gtd_collection_pages = [
+        GTD.from_notion(r) for r in page_results if r["properties"]["이름"]["title"]
+    ]
     print("getting todoist date next action tasks")
     date_next_action_tasks = [
         Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
     ]
     print("closing todoist which is not in gtd")
     close_todoist_not_in_gtd(date_next_action_tasks,
-                             gtd_date_next_action_pages)
+                             gtd_date_next_action_pages + gtd_collection_pages)
     print("syncing todoist labels with gtd reminders")
     sync_labels2meta_reminders(gtd_date_next_action_pages)
 

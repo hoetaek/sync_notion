@@ -139,6 +139,19 @@ def get_gtd_checked_collection_pages():
     return result["results"]
 
 
+def get_gtd_unchecked_collection_pages():
+    result = notion.databases.query(
+        gtd_database_id,
+        filter={
+            "and": [
+                {"property": "상태", "select": {"does_not_equal": "완료"}},
+                {"property": "완료", "checkbox": {"equals": False}},
+            ]
+        },
+    )
+    return result["results"]
+
+
 def get_gtd_email_collection_page(email_title: str):
     result = notion.databases.query(
         gtd_database_id,
