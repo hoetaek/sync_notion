@@ -17,10 +17,28 @@ credentials = {
 
 
 gc = gspread.service_account_from_dict(credentials)
-sh = gc.open_by_key("1Y1Os2QRLS5BcGgMMFpS-YnXmIEnLpjfClYYgvN2Gcko")
-
+stock_sh = gc.open_by_key("1Y1Os2QRLS5BcGgMMFpS-YnXmIEnLpjfClYYgvN2Gcko")
+hds_sh = gc.open_by_key("1ki42gx7Wdv5BuJegYrqybSZdy6h7XNi0JQXcPxBWPHE")
 
 def get_sheet_stocks():
-    worksheet = sh.worksheet("매매 내역")
-    stocks = worksheet.col_values(3)[1:]
-    return stocks
+  worksheet = stock_sh.worksheet("매매 내역")
+  stocks = worksheet.col_values(3)[1:]
+  return stocks
+
+
+def get_indi_urls():
+  worksheet = hds_sh.worksheet("04 인디스쿨 게시물 모음")
+  urls = worksheet.col_values(4)[1:]
+  return urls
+
+
+def write_view_heart_num(input_list, input_type="view"):
+  worksheet = hds_sh.worksheet("04 인디스쿨 게시물 모음")
+  cell_range = "E2:E" if input_type == "view" else "F2:F"
+  cell_list = worksheet.range(cell_range + str(len(input_list) + 1))
+
+  for i, val in enumerate(input_list):  #gives us a tuple of an index and value
+      cell_list[i].value = val    #use the index on cell_list and the val from cell_values
+
+  worksheet.update_cells(cell_list)
+
