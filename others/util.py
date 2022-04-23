@@ -51,6 +51,7 @@ def notion_cleanup_HDS():
 
 
 def update_hds_indi_num():
+    print("debug print")
     update_gspread_indi_nums_HDS()
 
 
