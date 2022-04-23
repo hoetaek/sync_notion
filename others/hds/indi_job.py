@@ -33,7 +33,13 @@ def get_view_heart_num(driver, url):
 
 
 def work(urls):
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    options = webdriver.ChromeOptions()
+    options.add_argument("headless")
+    options.add_argument("window-size=1920x1080")
+    options.add_argument("disable-gpu")
+
+    driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
+
     login(driver)
 
     for url in urls:
