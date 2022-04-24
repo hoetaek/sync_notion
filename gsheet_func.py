@@ -29,7 +29,7 @@ def get_sheet_stocks():
 
 def get_indi_urls():
     worksheet = hds_sh.worksheet("04 인디스쿨 게시물 모음")
-    urls = worksheet.col_values(4)[1:]
+    urls = worksheet.col_values(5)[4:]
     return urls
 
 
