@@ -35,10 +35,12 @@ def get_view_heart_num(driver, url):
 def work(urls):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless") # 창을 띄우지 않음
+    chrome_options.add_argument("--headless")  # 창을 띄우지 않음
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox") # 샌드박스 보안 비활성화
-    driver = webdriver.Chrome(executable_path=environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    chrome_options.add_argument("--no-sandbox")  # 샌드박스 보안 비활성화
+    driver = webdriver.Chrome(
+        executable_path=environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options
+    )
 
     login(driver)
 

@@ -36,11 +36,9 @@ def get_indi_urls():
 def write_view_heart_num(input_list, input_type="view"):
     worksheet = hds_sh.worksheet("04 인디스쿨 게시물 모음")
     cell_range = "F5:F" if input_type == "view" else "G5:G"
-    cell_list = worksheet.range(cell_range + str(len(input_list) + 1))
+    cell_list = worksheet.range(cell_range + str(len(input_list) + 4))
 
-    for i, val in enumerate(input_list):  # gives us a tuple of an index and value
-        cell_list[
-            i
-        ].value = val  # use the index on cell_list and the val from cell_values
+    for i, val in enumerate(input_list):
+        cell_list[i].value = val
 
     worksheet.update_cells(cell_list)
