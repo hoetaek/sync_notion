@@ -6,6 +6,7 @@ from flask import Flask, abort, request
 from others.util import (
     notion_cleanup_coding_kkanbu,
     notion_cleanup_edutech,
+    notion_cleanup_GBinder,
     notion_cleanup_HDS,
     notion_cleanup_SH_PERSONAL,
     notion_cleanup_SH_teacher,
@@ -89,6 +90,15 @@ def notion_for_HDS():
 def gspread_for_HDS():
     heavy_process = Process(  # Create a daemonic process with heavy "my_func"
         target=update_hds_indi_num, daemon=True
+    )
+    heavy_process.start()
+    return "<script>window.onload = window.close();</script>"
+
+
+@app.route("/gbinder-notion-clean-gtd")
+def notion_for_GBinder():
+    heavy_process = Process(  # Create a daemonic process with heavy "my_func"
+        target=notion_cleanup_GBinder, daemon=True
     )
     heavy_process.start()
     return "<script>window.onload = window.close();</script>"

@@ -7,6 +7,7 @@ import others.others_notion_job as others_notion_job
 from others.constants import (
     edutech_gtd_database_id,
     hds_gtd_database_id,
+    gbinder_gtd_database_id,
     kkanbu_gtd_database_id,
     personal_gtd_database_id,
     sh_teacher_gtd_database_id,
@@ -50,8 +51,23 @@ def notion_cleanup_HDS():
         others_notion_job.update_gtd_page_complete(notion, page_id)
 
 
+def notion_cleanup_GBinder():
+    token = environ["NOTION_TOKEN_GBinder"]
+    notion = Client(auth=token)
+
+    page_results = others_notion_job.get_gtd_checked_pages(
+        notion,
+        gbinder_gtd_database_id,
+        add_filters={"property": "상태", "select": {"does_not_equal": "공식 일정"}},
+    )
+
+    print(page_results)
+    for page in page_results:
+        page_id = page["id"]
+        others_notion_job.update_gtd_page_complete(notion, page_id)
+
+
 def update_hds_indi_num():
-    print("debug print")
     update_gspread_indi_nums_HDS()
 
 

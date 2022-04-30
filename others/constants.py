@@ -1,5 +1,6 @@
 sh_teacher_gtd_database_id = "b90e1fd964c849c39884376f6e8acd40"
 hds_gtd_database_id = "8639d93f20cb487995416c427af017bd"
+gbinder_gtd_database_id = "92fba28addd948698ae0a2fe58067ab2"
 personal_gtd_database_id = "002f20315bce4f1e8f527d22c3e0f928"
 kkanbu_gtd_database_id = "2b87ffc072dc4bdc9dd4ecb80b4ac6fa"
 edutech_gtd_database_id = "3167997441ba4b2396869c6d6a925ee8"
