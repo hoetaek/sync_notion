@@ -58,6 +58,7 @@ def handle_webhook_task(item):
 def notion2todoist_and_notion_cleanup():
     try:
         send_tickler2collection()
+        send_today_next_actions2collection()
         update_checked_collection2done()
         sync_date_next_actions2todoist()
     except Exception:
@@ -96,6 +97,13 @@ def get_db_reports():
 
 def send_tickler2collection():
     page_results = notion_job.get_tickler_pages()
+    for page in page_results:
+        page_id = page["id"]
+        notion_job.update_gtd_page2collection(page_id)
+
+
+def send_today_next_actions2collection():
+    page_results = notion_job.get_today_next_action_pages()
     for page in page_results:
         page_id = page["id"]
         notion_job.update_gtd_page2collection(page_id)

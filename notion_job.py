@@ -194,6 +194,22 @@ def get_tickler_pages():
     return result["results"]
 
 
+def get_today_next_action_pages():
+    result = notion.databases.query(
+        gtd_database_id,
+        filter={
+            "and": [
+                {"property": "상태", "select": {"equals": "다음 행동"}},
+                {
+                    "property": "일정",
+                    "date": {"on_or_before": datetime.now().isoformat()},
+                },
+            ]
+        },
+    )
+    return result["results"]
+
+
 def update_gtd_date_next_action_pages_todoist_id(page_id, task_id):
     notion.pages.update(
         page_id=page_id,
