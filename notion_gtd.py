@@ -38,7 +38,8 @@ class GTD(Action):
     def from_webhook(cls, item):
         task_id = item["event_data"]["id"]
         title = item["event_data"]["content"]
-        reminder_dict = [{v["label_id"]: k} for k, v in get_meta_reminders_dict()]
+        print(get_meta_reminders_dict())
+        reminder_dict = [{v["label_id"]: k} for k, v in get_meta_reminders_dict().items()]
         reminder_id = item["evernt_data"].get("labels", None)
         reminder = reminder_dict[reminder_id] if reminder_id else None
         due_data = item["event_data"].get("due")
