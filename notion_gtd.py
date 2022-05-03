@@ -38,10 +38,9 @@ class GTD(Action):
     def from_webhook(cls, item):
         task_id = item["event_data"]["id"]
         title = item["event_data"]["content"]
-        print(get_meta_reminders_dict())
-        reminder_dict = [{v["label_id"]: k} for k, v in get_meta_reminders_dict().items()]
+        reminder_dict = {v["label_id"]: k for k, v in get_meta_reminders_dict().items()}
         reminder_id = item["event_data"].get("labels", None)
-        reminder = reminder_dict[reminder_id] if reminder_id else None
+        reminder = reminder_dict[reminder_id[0]] if reminder_id else None
         due_data = item["event_data"].get("due")
         date = due_data["date"] if due_data != None else None
         date = date if date != datetime.today().strftime("%Y-%m-%d") else None
@@ -54,11 +53,13 @@ class GTD(Action):
         return False
 
     def create(self):
-        data = {
+        data = None
+        if self.reminder:
+            data = {
             "실행 환기": {
-                "multi_select": {
-                    "name": self.reminder,
-                }
+                "multi_select": [
+                    {"name": self.reminder}
+                ]
             }
         }
         return create_gtd_collect_page(self.title, self.date, property_extra_data=data)
