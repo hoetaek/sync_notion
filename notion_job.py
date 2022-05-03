@@ -73,6 +73,9 @@ def create_gtd_collect_page(title, date=None, property_extra_data=None):
         "상태": {"select": {"color": "pink", "name": "-----수집함-----"}},
     }
 
+    if property_extra_data:
+        property_data.update(property_extra_data)
+
     if date:
         if len(date) > 10:
             date = date + ".000+09:00"

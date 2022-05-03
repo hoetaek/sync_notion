@@ -5,6 +5,7 @@ from constants import color_dict
 from notion_job import (
     create_gtd_collect_page,
     get_gtd_date_next_action_pages,
+    get_meta_reminders_dict,
     update_gtd_date_next_action_pages_todoist_id,
     update_gtd_page_complete,
 )
@@ -37,11 +38,14 @@ class GTD(Action):
     def from_webhook(cls, item):
         task_id = item["event_data"]["id"]
         title = item["event_data"]["content"]
+        reminder_dict = [{v["label_id"]: k} for k, v in get_meta_reminders_dict()]
+        reminder_id = item["evernt_data"].get("labels", None)
+        reminder = reminder_dict[reminder_id] if reminder_id else None
         due_data = item["event_data"].get("due")
         date = due_data["date"] if due_data != None else None
         date = date if date != datetime.today().strftime("%Y-%m-%d") else None
         page_id = item["event_data"]["description"]
-        return cls(page_id, title, None, date, task_id)
+        return cls(page_id, title, reminder, date, task_id)
 
     def is_at_todoist(self):
         if self.task_id:
@@ -49,7 +53,14 @@ class GTD(Action):
         return False
 
     def create(self):
-        return create_gtd_collect_page(self.title, self.date)
+        data = {
+            "실행 환기": {
+                "multi_select": {
+                    "name": self.reminder,
+                }
+            }
+        }
+        return create_gtd_collect_page(self.title, self.date, property_extra_data=data)
 
     def update(self):
         update_gtd_date_next_action_pages_todoist_id(self.page_id, self.task_id)

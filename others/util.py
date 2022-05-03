@@ -6,8 +6,8 @@ from notion_client import Client
 import others.others_notion_job as others_notion_job
 from others.constants import (
     edutech_gtd_database_id,
-    hds_gtd_database_id,
     gbinder_gtd_database_id,
+    hds_gtd_database_id,
     kkanbu_gtd_database_id,
     personal_gtd_database_id,
     sh_teacher_gtd_database_id,
