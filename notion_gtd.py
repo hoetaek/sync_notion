@@ -26,7 +26,11 @@ class GTD(Action):
             for i in page_obj["properties"]["실행 환기"]["multi_select"]
         ]
         date = None
-        if page_obj["properties"]["일정"]["date"] != None:
+        print(page_obj["properties"]["상태"]["select"])
+        if (
+            page_obj["properties"]["일정"]["date"] != None
+            and page_obj["properties"]["상태"]["select"]["name"] == "일정"
+        ):
             date = page_obj["properties"]["일정"]["date"]["start"]
         task_id = page_obj["properties"]["Todoist id"]["number"]
         priority = 4
