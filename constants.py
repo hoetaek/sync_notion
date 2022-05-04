@@ -12,4 +12,5 @@ color_dict = {
     "brown": 49,
     "red": 31,
     "yellow": 33,
+    "blue": 41
 }
