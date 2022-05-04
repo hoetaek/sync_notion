@@ -12,8 +12,10 @@ from notion_job import (
 
 
 class GTD(Action):
-    def __init__(self, page_id, title, reminder, date, task_id, checked=False):
-        super().__init__(page_id, title, reminder, date, task_id, checked)
+    def __init__(
+        self, page_id, title, reminder, date, task_id, priority=4, checked=False
+    ):
+        super().__init__(page_id, title, reminder, date, task_id, priority, checked)
 
     @classmethod
     def from_notion(cls, page_obj):
@@ -27,8 +29,16 @@ class GTD(Action):
         if page_obj["properties"]["일정"]["date"] != None:
             date = page_obj["properties"]["일정"]["date"]["start"]
         task_id = page_obj["properties"]["Todoist id"]["number"]
+        priority = 4
+        if page_obj["properties"]["우선순위"]["rollup"]["array"]:
+            priority = int(
+                page_obj["properties"]["우선순위"]["rollup"]["array"][0]["formula"][
+                    "string"
+                ][-1]
+            )
+        print(priority)
         checked = page_obj["properties"]["완료"]["checkbox"]
-        return cls(page_id, title, reminder, date, task_id, checked)
+        return cls(page_id, title, reminder, date, task_id, priority, checked)
 
     @classmethod
     def from_todoist(cls, todoist):
@@ -55,13 +65,7 @@ class GTD(Action):
     def create(self):
         data = None
         if self.reminder:
-            data = {
-            "실행 환기": {
-                "multi_select": [
-                    {"name": self.reminder}
-                ]
-            }
-        }
+            data = {"실행 환기": {"multi_select": [{"name": self.reminder}]}}
         return create_gtd_collect_page(self.title, self.date, property_extra_data=data)
 
     def update(self):

@@ -179,13 +179,15 @@ def sync_date_next_actions2todoist():
                 for reminder in task.reminder
                 if reminder not in task_from_todoist.reminder
             ]
+            or task.priority != task_from_todoist.priority
         ):
             print(
                 task.title != task_from_todoist.title,
                 task_date != task_from_todoist_date,
                 task.reminder != task_from_todoist.reminder,
+                task.priority != task_from_todoist.priority,
             )
-            print(task_date, task_from_todoist_date)
+            print(task.priority, task_from_todoist.priority)
             print(task.reminder, task_from_todoist.reminder)
             print("updating", task)
             print("*" * 20)

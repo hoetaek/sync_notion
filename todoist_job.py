@@ -36,12 +36,13 @@ def get_date_next_action_tasks():
     return result
 
 
-def create_date_next_action_task(page_id, title, label_ids, date):
+def create_date_next_action_task(page_id, title, label_ids, date, priority):
     task_data = {
         "content": title,
         "project_id": date_next_action_project_id,
         "description": page_id,
         "label_ids": label_ids,
+        "priority": 5 - priority,
     }
     # if date:
     #     task_data["due_datetime"] = date
@@ -65,10 +66,11 @@ def create_date_next_action_task(page_id, title, label_ids, date):
     return result
 
 
-def update_date_next_action_task(task_id, title, label_ids, date):
+def update_date_next_action_task(task_id, title, label_ids, date, priority):
     task_data = {
         "content": title,
         "label_ids": label_ids,
+        "priority": 5 - priority,
     }
     if not date:
         task_data["due_string"] = "no date"

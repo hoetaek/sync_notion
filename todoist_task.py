@@ -12,8 +12,12 @@ from todoist_job import (
 class Task(Action):
     meta_reminders_dict = dict()
 
-    def __init__(self, page_id, title, reminder, date, task_id, checked=False):
-        super(Task, self).__init__(page_id, title, reminder, date, task_id, checked)
+    def __init__(
+        self, page_id, title, reminder, date, task_id, priority=4, checked=False
+    ):
+        super(Task, self).__init__(
+            page_id, title, reminder, date, task_id, priority, checked
+        )
 
     @classmethod
     def from_todoist(cls, todoist_obj):
@@ -38,9 +42,10 @@ class Task(Action):
                 date = todoist_obj.get("due").get("date")
         else:
             date = None
-
+        priority = 5 - todoist_obj["priority"]
+        print(priority)
         task_id = todoist_obj["id"]
-        return cls(page_id, title, reminder, date, task_id)
+        return cls(page_id, title, reminder, date, task_id, priority)
 
     @classmethod
     def from_gtd(cls, gtd):
@@ -68,7 +73,7 @@ class Task(Action):
         ]
         print(label_ids)
         return create_date_next_action_task(
-            self.page_id, self.title, label_ids, self.date
+            self.page_id, self.title, label_ids, self.date, self.priority
         )
 
     def update(self):
@@ -76,7 +81,9 @@ class Task(Action):
         label_ids = [
             Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder
         ]
-        update_date_next_action_task(self.task_id, self.title, label_ids, self.date)
+        update_date_next_action_task(
+            self.task_id, self.title, label_ids, self.date, self.priority
+        )
         # if self.checked == True:
         #     print("unchecked")
         #     reopen_task(self.task_id)
