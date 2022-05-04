@@ -36,7 +36,6 @@ class GTD(Action):
                     "string"
                 ][-1]
             )
-        print(priority)
         checked = page_obj["properties"]["완료"]["checkbox"]
         return cls(page_id, title, reminder, date, task_id, priority, checked)
 

@@ -43,7 +43,6 @@ class Task(Action):
         else:
             date = None
         priority = 5 - todoist_obj["priority"]
-        print(priority)
         task_id = todoist_obj["id"]
         return cls(page_id, title, reminder, date, task_id, priority)
 
