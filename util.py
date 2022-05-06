@@ -33,6 +33,11 @@ def handle_webhook_task(item):
             notion2todoist_and_notion_cleanup()
             todoist_job.reopen_task(5819562264)
         elif (
+            item["event_name"] == "item:completed"
+            and item["event_data"]["id"] == 5824348275
+        ):
+            todoist_job.reopen_task(5819562264)
+        elif (
             item["event_name"] == "item:added"
             and item["event_data"]["project_id"] == inbox_project_id
         ):
