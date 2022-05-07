@@ -9,6 +9,7 @@ from constants import inbox_project_id
 from notion_gtd import GTD
 from report_job import crawl_fin_reports
 from todoist_task import Task
+from bus_arrival import get_bus_arrival_time
 
 # def update_notion_stocks():
 #     stocks_from_sheet = list(set(gsheet_func.get_sheet_stocks()))
@@ -36,6 +37,8 @@ def handle_webhook_task(item):
             item["event_name"] == "item:completed"
             and item["event_data"]["id"] == 5824348275
         ):
+            arrival_time = get_bus_arrival_time()
+            todoist_job.update_task(5819562264, arrival_time)
             todoist_job.reopen_task(5819562264)
         elif (
             item["event_name"] == "item:added"

@@ -92,6 +92,22 @@ def update_date_next_action_task(task_id, title, label_ids, date, priority):
     )
 
 
+def update_task(task_id, content):
+    requests.post(
+        "https://api.todoist.com/rest/v1/tasks/" + str(task_id),
+        data=json.dumps(
+            {
+                "content": content,
+            }
+        ),
+        headers={
+            "Content-Type": "application/json",
+            "X-Request-Id": str(uuid.uuid4()),
+            "Authorization": "Bearer " + token,
+        },
+    )
+
+
 def delete_task(task_id):
     requests.delete(
         f"https://api.todoist.com/rest/v1/tasks/{task_id}",
