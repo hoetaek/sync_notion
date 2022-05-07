@@ -38,8 +38,8 @@ def handle_webhook_task(item):
             and item["event_data"]["id"] == 5824348275
         ):
             arrival_time = get_bus_arrival_time()
-            todoist_job.update_task(5824348275, arrival_time)
             todoist_job.reopen_task(5824348275)
+            todoist_job.update_task(5824348275, arrival_time)
         elif (
             item["event_name"] == "item:added"
             and item["event_data"]["project_id"] == inbox_project_id
