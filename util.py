@@ -30,33 +30,15 @@ def handle_webhook_task(item):
                 arrival_time = get_bus_arrival_time()
                 todoist_job.reopen_task(bus_time_task_id)
                 todoist_job.update_task(bus_time_task_id, arrival_time)
-        elif item["event_name"] == "item:added" and item["event_data"][
-            "project_id"
-        ] in [inbox_project_id, email_project_id]:
+        elif item["event_name"] == "item:added":
             gtd = GTD.from_webhook(item)
             if item["event_data"]["project_id"] == email_project_id:
                 gtd.reminder = "이메일"
-            gtd.create()
-            task = Task.from_gtd(gtd)
-            task.delete()
-        elif (
-            item["event_name"] == "note:added" and item["event_data"]["file_attachment"]
-        ):
-            file_url = item["event_data"]["file_attachment"]["file_url"]
-            item_id = item["event_data"]["item_id"]
-            print(item_id)
-            email_title = item["event_data"]["file_attachment"]["file_name"]
-            # notion_job.create_errorpage_in_gtd_collect(email_title)
-            content = item["event_data"]["content"]
-            time.sleep(10)
-            results = notion_job.get_gtd_email_collection_page(email_title)
-
-            page_id = None
-            if results:
-                page_id = results[0]["id"]
-
-            if page_id and not notion_job.get_block_children(page_id):
-                notion_job.update_gtd_email_collection_page(page_id, file_url, content)
+                gtd.create()
+            elif item["event_data"]["project_id"] == inbox_project_id:
+                gtd.create()
+                task = Task.from_gtd(gtd)
+                task.delete()
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
