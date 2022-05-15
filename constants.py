@@ -3,7 +3,10 @@ stock_database_id = "a7ba96b55c5f42aebacbe8a1818c3c88"
 meta_reminders_database_id = "9392816f03e142ee959e13ca5059a5dd"
 reports_database_id = "8ac7da25b41e4de2854fc2bc91fabc14"
 inbox_project_id = 2169583011
+email_project_id = 2291540838
 date_next_action_project_id = 2169583014
+cleanup_task_id = 5819562264
+bus_time_task_id = 5824348275
 
 color_dict = {
     "purple": 42,

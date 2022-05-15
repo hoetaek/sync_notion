@@ -5,46 +5,37 @@ from typing import List
 
 import notion_job
 import todoist_job
-from constants import inbox_project_id
+from constants import (
+    inbox_project_id,
+    email_project_id,
+    cleanup_task_id,
+    bus_time_task_id,
+)
 from notion_gtd import GTD
 from report_job import crawl_fin_reports
 from todoist_task import Task
 from bus_arrival import get_bus_arrival_time
 
-# def update_notion_stocks():
-#     stocks_from_sheet = list(set(gsheet_func.get_sheet_stocks()))
-#     stocks_from_db = notion_job.get_pages_from_stock_db()
-
-#     new_stocks = [i for i in stocks_from_sheet if i not in stocks_from_db]
-#     print(new_stocks)
-
-#     for stock in new_stocks:
-#         notion_job.create_stock_page(stock)
-
 
 def handle_webhook_task(item):
     try:
-        if item["event_name"] == "item:completed" and item["event_data"]["description"]:
+        if item["event_name"] == "item:completed":
+            if item["event_data"]["description"]:
+                gtd = GTD.from_webhook(item)
+                gtd.complete()
+            elif item["event_data"]["id"] == cleanup_task_id:
+                notion2todoist_and_notion_cleanup()
+                todoist_job.reopen_task(cleanup_task_id)
+            elif item["event_data"]["id"] == bus_time_task_id:
+                arrival_time = get_bus_arrival_time()
+                todoist_job.reopen_task(bus_time_task_id)
+                todoist_job.update_task(bus_time_task_id, arrival_time)
+        elif item["event_name"] == "item:added" and item["event_data"][
+            "project_id"
+        ] in [inbox_project_id, email_project_id]:
             gtd = GTD.from_webhook(item)
-            gtd.complete()
-        elif (
-            item["event_name"] == "item:completed"
-            and item["event_data"]["id"] == 5819562264
-        ):
-            notion2todoist_and_notion_cleanup()
-            todoist_job.reopen_task(5819562264)
-        elif (
-            item["event_name"] == "item:completed"
-            and item["event_data"]["id"] == 5824348275
-        ):
-            arrival_time = get_bus_arrival_time()
-            todoist_job.reopen_task(5824348275)
-            todoist_job.update_task(5824348275, arrival_time)
-        elif (
-            item["event_name"] == "item:added"
-            and item["event_data"]["project_id"] == inbox_project_id
-        ):
-            gtd = GTD.from_webhook(item)
+            if item["event_data"]["project_id"] == email_project_id:
+                gtd.reminder = "이메일"
             gtd.create()
             task = Task.from_gtd(gtd)
             task.delete()
@@ -52,7 +43,8 @@ def handle_webhook_task(item):
             item["event_name"] == "note:added" and item["event_data"]["file_attachment"]
         ):
             file_url = item["event_data"]["file_attachment"]["file_url"]
-            # item_id = item["event_data"]["item_id"]
+            item_id = item["event_data"]["item_id"]
+            print(item_id)
             email_title = item["event_data"]["file_attachment"]["file_name"]
             # notion_job.create_errorpage_in_gtd_collect(email_title)
             content = item["event_data"]["content"]
