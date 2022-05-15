@@ -59,7 +59,7 @@ def create_stock_page(stock_name):
 
 
 ################ gtd ################
-def create_gtd_collect_page(title, date=None, property_extra_data=None):
+def create_gtd_collect_page(title, date=None, property_extra_data=None, children=None):
     property_data = {
         "이름": {
             "title": [
@@ -85,6 +85,7 @@ def create_gtd_collect_page(title, date=None, property_extra_data=None):
             "database_id": gtd_database_id,
         },
         properties=property_data,
+        children=children,
     )
     return page["id"]
 

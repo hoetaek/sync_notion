@@ -65,11 +65,13 @@ class GTD(Action):
             return True
         return False
 
-    def create(self):
+    def create(self, children=None):
         data = None
         if self.reminder:
             data = {"실행 환기": {"multi_select": [{"name": self.reminder}]}}
-        return create_gtd_collect_page(self.title, self.date, property_extra_data=data)
+        return create_gtd_collect_page(
+            self.title, self.date, property_extra_data=data, children=children
+        )
 
     def update(self):
         update_gtd_date_next_action_pages_todoist_id(self.page_id, self.task_id)

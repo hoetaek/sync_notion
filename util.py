@@ -34,7 +34,29 @@ def handle_webhook_task(item):
             gtd = GTD.from_webhook(item)
             if item["event_data"]["project_id"] == email_project_id:
                 gtd.reminder = "이메일"
-                gtd.create()
+                task_url = "https://todoist.com/showTask?id=" + str(
+                    item["event_data"]["id"]
+                )
+                children = (
+                    {
+                        "object": "block",
+                        "type": "paragraph",
+                        "paragraph": {
+                            "rich_text": [
+                                {
+                                    "type": "text",
+                                    "text": {
+                                        "content": "todoist 보러 가기",
+                                        "link": {
+                                            "url": task_url,
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                )
+                gtd.create(children)
             elif item["event_data"]["project_id"] == inbox_project_id:
                 gtd.create()
                 task = Task.from_gtd(gtd)
