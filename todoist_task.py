@@ -81,7 +81,7 @@ class Task(Action):
             Task.meta_reminders_dict[k["name"]]["label_id"] for k in self.reminder
         ]
         update_date_next_action_task(
-            self.task_id, self.title, label_ids, self.date, self.priority, self.page_id
+            self.task_id, self.title, label_ids, self.date, self.priority
         )
         # if self.checked == True:
         #     print("unchecked")
