@@ -394,9 +394,3 @@ def update_fin_report_content(page_id, contents, file_url):
     for content in list(filter(lambda x: x != "", contents.split("\n"))):
         block_children.append(paragraph_block_format(content))
     fin_notion.blocks.children.append(block_id=page_id, children=block_children)
-
-
-if __name__ == "__main__":
-    from pprint import pprint
-
-    pprint(get_reports())

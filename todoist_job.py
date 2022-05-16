@@ -66,12 +66,11 @@ def create_date_next_action_task(page_id, title, label_ids, date, priority):
     return result
 
 
-def update_date_next_action_task(task_id, title, label_ids, date, priority, page_id):
+def update_date_next_action_task(task_id, title, label_ids, date, priority):
     task_data = {
         "content": title,
         "label_ids": label_ids,
         "priority": 5 - priority,
-        "description": page_id,
     }
     if not date:
         task_data["due_string"] = "no date"
@@ -93,14 +92,10 @@ def update_date_next_action_task(task_id, title, label_ids, date, priority, page
     )
 
 
-def update_task(task_id, content):
+def update_task(task_id, update_data: dict):
     requests.post(
         "https://api.todoist.com/rest/v1/tasks/" + str(task_id),
-        data=json.dumps(
-            {
-                "content": content,
-            }
-        ),
+        data=json.dumps(update_data),
         headers={
             "Content-Type": "application/json",
             "X-Request-Id": str(uuid.uuid4()),

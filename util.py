@@ -32,7 +32,7 @@ def handle_webhook_task(item):
             elif item["event_data"]["id"] == bus_time_task_id:
                 arrival_time = get_bus_arrival_time()
                 todoist_job.reopen_task(bus_time_task_id)
-                todoist_job.update_task(bus_time_task_id, arrival_time)
+                todoist_job.update_task(bus_time_task_id, {"content": arrival_time})
         elif item["event_name"] == "item:added":
             gtd = GTD.from_webhook(item)
             if item["event_data"]["project_id"] == email_project_id:
@@ -59,10 +59,9 @@ def handle_webhook_task(item):
                         },
                     },
                 )
+                task_id = item["event_data"]["id"]
                 page_id = gtd.create(children)
-                task = Task.from_gtd(gtd)
-                task.page_id = page_id
-                task.update()
+                todoist_job.update_task(task_id, {"description": page_id})
             elif item["event_data"]["project_id"] == inbox_project_id:
                 gtd.create()
                 task = Task.from_gtd(gtd)
