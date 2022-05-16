@@ -80,13 +80,16 @@ def create_gtd_collect_page(title, date=None, property_extra_data=None, children
         if len(date) > 10:
             date = date + ".000+09:00"
         property_data["일정"] = {"date": {"start": date}}
-    page = notion.pages.create(
-        parent={
+
+    page_create_args = {
+        "parent": {
             "database_id": gtd_database_id,
         },
-        properties=property_data,
-        children=children,
-    )
+        "properties": property_data,
+    }
+    if children:
+        page_create_args["children"] = children
+    page = notion.pages.create(**page_create_args)
     return page["id"]
 
 
