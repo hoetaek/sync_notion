@@ -8,6 +8,7 @@ from notion_job import (
     get_meta_reminders_dict,
     update_gtd_date_next_action_pages_todoist_id,
     update_gtd_page_complete,
+    delete_page,
 )
 
 
@@ -79,6 +80,9 @@ class GTD(Action):
     def complete(self):
         if self.page_id:
             update_gtd_page_complete(self.page_id)
+
+    def delete(self):
+        delete_page(self.page_id)
 
 
 if __name__ == "__main__":

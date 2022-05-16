@@ -22,7 +22,10 @@ def handle_webhook_task(item):
         if item["event_name"] == "item:completed":
             if item["event_data"]["description"]:
                 gtd = GTD.from_webhook(item)
-                gtd.complete()
+                if item["event_data"]["project_id"] == inbox_project_id:
+                    gtd.complete()
+                elif item["event_data"]["project_id"] == email_project_id:
+                    gtd.delete()
             elif item["event_data"]["id"] == cleanup_task_id:
                 notion2todoist_and_notion_cleanup()
                 todoist_job.reopen_task(cleanup_task_id)
@@ -56,7 +59,10 @@ def handle_webhook_task(item):
                         },
                     },
                 )
-                gtd.create(children)
+                page_id = gtd.create(children)
+                task = Task.from_gtd(gtd)
+                task.page_id = page_id
+                task.update()
             elif item["event_data"]["project_id"] == inbox_project_id:
                 gtd.create()
                 task = Task.from_gtd(gtd)
@@ -258,7 +264,7 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
         if reminder_name not in gtd_reminder_names
     ]
     for reminder_page_id, reminder_label_id in reminders_to_delete:
-        notion_job.delete_meta_reminders_page(reminder_page_id)
+        notion_job.delete_page(reminder_page_id)
         todoist_job.delete_label(reminder_label_id)
 
 

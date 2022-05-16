@@ -342,9 +342,9 @@ def get_meta_reminders_dict():
     return reminders_dict
 
 
-def delete_meta_reminders_page(reminder_page_id):
+def delete_page(page_id):
     notion.pages.update(
-        page_id=reminder_page_id,
+        page_id=page_id,
         archived=True,
     )
 

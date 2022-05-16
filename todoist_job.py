@@ -66,11 +66,12 @@ def create_date_next_action_task(page_id, title, label_ids, date, priority):
     return result
 
 
-def update_date_next_action_task(task_id, title, label_ids, date, priority):
+def update_date_next_action_task(task_id, title, label_ids, date, priority, page_id):
     task_data = {
         "content": title,
         "label_ids": label_ids,
         "priority": 5 - priority,
+        "description": page_id,
     }
     if not date:
         task_data["due_string"] = "no date"
