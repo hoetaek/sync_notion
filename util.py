@@ -105,6 +105,13 @@ def get_db_reports():
     return db_urls
 
 
+def send_inbox2collection():
+    inbox_tasks = [Task.from_todoist(task) for task in todoist_job.get_inbox_tasks()]
+    for task in inbox_tasks:
+        gtd = GTD.from_todoist(task)
+        gtd.create()
+
+
 def send_tickler2collection():
     page_results = notion_job.get_tickler_pages()
     for page in page_results:
@@ -256,4 +263,5 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 
 if __name__ == "__main__":
-    send_tickler2collection()
+    # send_tickler2collection()
+    send_inbox2collection()
