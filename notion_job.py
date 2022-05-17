@@ -159,13 +159,13 @@ def get_gtd_unchecked_collection_pages():
     return result["results"]
 
 
-def get_gtd_email_collection_page(email_title: str):
+def search_collection_page(title: str):
     result = notion.databases.query(
         gtd_database_id,
         filter={
             "and": [
                 {"property": "상태", "select": {"equals": "-----수집함-----"}},
-                {"property": "이름", "text": {"equals": email_title}},
+                {"property": "이름", "text": {"equals": title}},
             ]
         },
     )

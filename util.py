@@ -20,9 +20,9 @@ from bus_arrival import get_bus_arrival_time
 
 def handle_webhook_task(item):
     try:
+        gtd = GTD.from_webhook(item)
         if item["event_name"] == "item:completed":
             if item["event_data"]["description"]:
-                gtd = GTD.from_webhook(item)
                 if item["event_data"]["project_id"] == date_next_action_project_id:
                     gtd.complete()
                 elif item["event_data"]["project_id"] == email_project_id:
@@ -34,8 +34,9 @@ def handle_webhook_task(item):
                 arrival_time = get_bus_arrival_time()
                 todoist_job.reopen_task(bus_time_task_id)
                 todoist_job.update_task(bus_time_task_id, {"content": arrival_time})
-        elif item["event_name"] == "item:added":
-            gtd = GTD.from_webhook(item)
+        elif item[
+            "event_name"
+        ] == "item:added" and not notion_job.search_collection_page(gtd.title):
             if item["event_data"]["project_id"] == email_project_id:
                 gtd.reminder = "이메일"
                 task_url = "https://todoist.com/showTask?id=" + str(
