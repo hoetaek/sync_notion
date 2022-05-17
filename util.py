@@ -8,6 +8,7 @@ import todoist_job
 from constants import (
     inbox_project_id,
     email_project_id,
+    date_next_action_project_id,
     cleanup_task_id,
     bus_time_task_id,
 )
@@ -22,7 +23,7 @@ def handle_webhook_task(item):
         if item["event_name"] == "item:completed":
             if item["event_data"]["description"]:
                 gtd = GTD.from_webhook(item)
-                if item["event_data"]["project_id"] == inbox_project_id:
+                if item["event_data"]["project_id"] == date_next_action_project_id:
                     gtd.complete()
                 elif item["event_data"]["project_id"] == email_project_id:
                     gtd.delete()
