@@ -2,7 +2,6 @@ from os import environ
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 
 view_nums = []
 heart_nums = []
@@ -25,7 +24,6 @@ def get_view_heart_num(driver, url):
 
     view_num = int(soup.select("#post_tools > div:nth-child(2) > span")[0].text)
     heart_num = int(soup.select("#post_tools > div.flex.items-center.-mx-2")[0].text)
-
     view_nums.append(view_num)
     heart_nums.append(heart_num)
     print(view_num, heart_num)
@@ -33,14 +31,22 @@ def get_view_heart_num(driver, url):
 
 
 def work(urls):
+    on_heroku = False
+    if 'HEROKU' in environ:
+        on_heroku = True
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = environ.get("GOOGLE_CHROME_BIN")
     chrome_options.add_argument("--headless")  # 창을 띄우지 않음
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")  # 샌드박스 보안 비활성화
-    driver = webdriver.Chrome(
-        executable_path=environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options
-    )
+    if on_heroku:
+        chrome_options.binary_location = environ.get("GOOGLE_CHROME_BIN")
+        driver = webdriver.Chrome(
+            executable_path=environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options
+        )
+    else:
+        from webdriver_manager.chrome import ChromeDriverManager
+        driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=chrome_options)
+
 
     login(driver)
 
@@ -49,3 +55,6 @@ def work(urls):
     driver.quit()
 
     return view_nums, heart_nums
+
+if __name__=="__main__":
+    work(["https://indischool.com/boards/libArt/37232838"])
