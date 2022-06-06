@@ -38,32 +38,33 @@ def handle_webhook_task(item):
             "event_name"
         ] == "item:added" and not notion_job.search_collection_page(gtd.title):
             if item["event_data"]["project_id"] == email_project_id:
-                gtd.reminder = "이메일"
-                task_url = "https://todoist.com/showTask?id=" + str(
-                    item["event_data"]["id"]
-                )
-                children = (
-                    {
-                        "object": "block",
-                        "type": "paragraph",
-                        "paragraph": {
-                            "rich_text": [
-                                {
-                                    "type": "text",
-                                    "text": {
-                                        "content": "todoist 보러 가기",
-                                        "link": {
-                                            "url": task_url,
-                                        },
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                )
-                task_id = item["event_data"]["id"]
-                page_id = gtd.create(children)
-                todoist_job.update_task(task_id, {"description": page_id})
+                pass
+                # gtd.reminder = "이메일"
+                # task_url = "https://todoist.com/showTask?id=" + str(
+                #     item["event_data"]["id"]
+                # )
+                # children = (
+                #     {
+                #         "object": "block",
+                #         "type": "paragraph",
+                #         "paragraph": {
+                #             "rich_text": [
+                #                 {
+                #                     "type": "text",
+                #                     "text": {
+                #                         "content": "todoist 보러 가기",
+                #                         "link": {
+                #                             "url": task_url,
+                #                         },
+                #                     },
+                #                 },~
+                #             ],
+                #         },
+                #     },
+                # )
+                # task_id = item["event_data"]["id"]
+                # page_id = gtd.create(children)
+                # todoist_job.update_task(task_id, {"description": page_id})
             elif item["event_data"]["project_id"] == inbox_project_id:
                 gtd.create()
                 task = Task.from_gtd(gtd)
