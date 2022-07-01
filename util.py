@@ -154,7 +154,7 @@ def sync_date_next_actions2todoist():
     ]
     print("getting todoist date next action tasks")
     date_next_action_tasks = [
-        Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks()
+        Task.from_todoist(task) for task in todoist_job.get_date_next_action_tasks() if task["description"]
     ]
     print("closing todoist which is not in gtd")
     close_todoist_not_in_gtd(
@@ -272,4 +272,5 @@ def sync_labels2meta_reminders(gtd_date_next_action_pages: List[GTD]):
 
 if __name__ == "__main__":
     # send_tickler2collection()
-    send_inbox2collection()
+    # send_inbox2collection()
+    sync_date_next_actions2todoist()
