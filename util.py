@@ -33,7 +33,8 @@ def handle_webhook_task(item):
             elif item["event_data"]["id"] == bus_time_task_id:
                 arrival_time = get_bus_arrival_time()
                 todoist_job.reopen_task(bus_time_task_id)
-                todoist_job.update_task(bus_time_task_id, {"content": arrival_time})
+                todoist_job.update_task(
+                    bus_time_task_id, {"content": arrival_time})
         elif item[
             "event_name"
         ] == "item:added" and not notion_job.search_collection_page(gtd.title):
@@ -66,9 +67,10 @@ def handle_webhook_task(item):
                 # page_id = gtd.create(children)
                 # todoist_job.update_task(task_id, {"description": page_id})
             elif item["event_data"]["project_id"] == inbox_project_id:
-                gtd.create()
-                task = Task.from_gtd(gtd)
-                task.delete()
+                # gtd.create()
+                # task = Task.from_gtd(gtd)
+                # task.delete()
+                pass
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
@@ -114,7 +116,8 @@ def get_db_reports():
 
 
 def send_inbox2collection():
-    inbox_tasks = [Task.from_todoist(task) for task in todoist_job.get_inbox_tasks()]
+    inbox_tasks = [Task.from_todoist(task)
+                   for task in todoist_job.get_inbox_tasks()]
     for task in inbox_tasks:
         gtd = GTD.from_todoist(task)
         gtd.create()
@@ -172,7 +175,8 @@ def sync_date_next_actions2todoist():
             if task.date != None and len(task.date) > 10
             else task.date
         )
-        task_from_todoist = next((x for x in date_next_action_tasks if x == task), None)
+        task_from_todoist = next(
+            (x for x in date_next_action_tasks if x == task), None)
         if task_from_todoist:
             if task_from_todoist.date != None:
                 if len(task_from_todoist.date) == 20:
