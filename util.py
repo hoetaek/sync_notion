@@ -29,7 +29,6 @@ def handle_webhook_task(item):
                     gtd.delete()
             elif item["event_data"]["id"] == cleanup_task_id:
                 notion2todoist_and_notion_cleanup()
-                todoist_job.reopen_task(cleanup_task_id)
             elif item["event_data"]["id"] == bus_time_task_id:
                 arrival_time = get_bus_arrival_time()
                 todoist_job.reopen_task(bus_time_task_id)
