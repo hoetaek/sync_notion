@@ -75,12 +75,18 @@ def handle_webhook_task(item):
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
 
+def reopen_assistant():
+    todoist_job.reopen_task(cleanup_task_id)
+    todoist_job.reopen_task(bus_time_task_id)
+
+
 def notion2todoist_and_notion_cleanup():
     try:
         send_tickler2collection()
         send_today_next_actions2collection()
         update_checked_collection2done()
         sync_date_next_actions2todoist()
+        reopen_assistant()
     except Exception:
         notion_job.create_errorpage_in_gtd_collect(traceback.format_exc())
 
